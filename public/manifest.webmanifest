@@ -1,0 +1,15 @@
+{
+  "name": "Aklimasound Admin — Gestion de business",
+  "short_name": "AKS Admin",
+  "description": "Cockpit de pilotage Aklimasound : réservations, devis, matériel, finance, notifications.",
+  "start_url": "/admin",
+  "scope": "/admin",
+  "display": "standalone",
+  "background_color": "#060606",
+  "theme_color": "#060606",
+  "lang": "fr",
+  "icons": [
+    { "src": "/img/logo-aks-white.png", "sizes": "1254x1254", "type": "image/png", "purpose": "any" },
+    { "src": "/img/logo-aks-white.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
