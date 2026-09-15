@@ -4,6 +4,7 @@ import { store } from "@/lib/store";
 import { CONTACT, waLink } from "@/lib/data";
 import { Icon } from "./icons";
 import { useI18n } from "@/lib/i18n";
+import { track, fbqEvent } from "@/lib/track";
 
 export type Lead = { name: string; phone: string; email: string };
 const Ctx = createContext<{ send: (msg: string) => void }>({ send: () => {} });
@@ -24,6 +25,8 @@ export function WaProvider({ children }: { children: ReactNode }) {
     const full = lead
       ? `${msg}\n---\n${fr ? "Nom" : "Name"} : ${lead.name}\nWhatsApp : ${lead.phone}\nEmail : ${lead.email}`
       : msg;
+    track("whatsapp_open", { label: msg.split("\n")[0].slice(0, 100), known: !!lead });
+    fbqEvent("Contact");
     window.open(waLink(CONTACT.wa1, full), "_blank", "noopener");
   };
 
@@ -53,6 +56,8 @@ export function WaProvider({ children }: { children: ReactNode }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...lead, source: "WhatsApp (porte)" }),
     }).catch(() => {}); // silencieux : n'impacte jamais le visiteur
+    track("lead_captured", { label: "porte WhatsApp" });
+    fbqEvent("Lead");
     const msg = pending ?? "Bonjour Aklimasound !";
     setPending(null);
     openWa(msg, lead);

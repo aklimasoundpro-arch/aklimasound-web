@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { COOKIE, Col, addRow, db, delRow, notify, patchRow, persist, verifyToken } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
-const COLS: Col[] = ["leads", "quotes", "bookings", "products", "notifications"];
+const COLS: Col[] = ["leads", "quotes", "bookings", "products", "notifications", "events"];
 
 async function authed(req: Request) {
   const url = new URL(req.url);

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { LangProvider } from "@/lib/i18n";
 import { WaProvider } from "@/components/WaGate";
+import { SiteTracker } from "@/components/SiteTracker";
+import { MetaPixel } from "@/components/MetaPixel";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://aklimasound.tg"),
@@ -51,7 +53,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr">
       <body className="bg-motif antialiased">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        <LangProvider><WaProvider>{children}</WaProvider></LangProvider>
+        <LangProvider>
+          <WaProvider>
+            <SiteTracker />
+            <MetaPixel />
+            {children}
+          </WaProvider>
+        </LangProvider>
       </body>
     </html>
   );

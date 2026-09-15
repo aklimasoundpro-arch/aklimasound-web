@@ -73,7 +73,7 @@ export default function Devis() {
             {step === 1 && (
               <div className="grid gap-3 sm:grid-cols-2">
                 {DOMAINS.map((x) => (
-                  <button key={x.slug} onClick={() => { setDomain(x.slug); setStep(2); }}
+                  <button key={x.slug} data-track="simulator_domain" data-label={x.slug} onClick={() => { setDomain(x.slug); setStep(2); }}
                     className={`glass card-hover flex items-center gap-3 rounded-2xl p-4 text-left ${domain === x.slug ? "border-gold/60" : ""}`}>
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-ivory/12 bg-white/[0.04] text-gold"><Icon name={x.icon} className="h-4 w-4" /></span>
                     <span className="text-sm font-semibold">{L(x.name, lang)}</span>
@@ -97,7 +97,7 @@ export default function Devis() {
                 </label>
                 <div className="flex justify-between pt-2">
                   <button className="btn btn-outline" onClick={() => setStep(1)}>{t("back")}</button>
-                  <button className="btn btn-gold" onClick={() => setStep(3)} disabled={!domain}>{t("next")}</button>
+                  <button className="btn btn-gold" data-track="simulator_step" data-label="3-options" onClick={() => setStep(3)} disabled={!domain}>{t("next")}</button>
                 </div>
               </div>
             )}
@@ -115,7 +115,7 @@ export default function Devis() {
                 ))}
                 <div className="flex justify-between pt-2">
                   <button className="btn btn-outline" onClick={() => setStep(2)}>{t("back")}</button>
-                  <button className="btn btn-gold" onClick={() => setStep(4)}>{t("next")}</button>
+                  <button className="btn btn-gold" data-track="simulator_step" data-label="4-resume" onClick={() => setStep(4)}>{t("next")}</button>
                 </div>
               </div>
             )}

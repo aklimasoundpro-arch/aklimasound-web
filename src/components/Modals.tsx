@@ -7,6 +7,7 @@ import { CONTACT, fcfa, waLink } from "@/lib/data";
 import { Icon } from "./icons";
 import { useWa } from "./WaGate";
 import { api } from "@/lib/admin-api";
+import { track, fbqEvent } from "@/lib/track";
 
 function Shell({ open, onClose, children, wide }: { open: boolean; onClose: () => void; children: React.ReactNode; wide?: boolean }) {
   if (!open) return null;
@@ -29,7 +30,7 @@ export function SignupModal() {
     const key = "aks_signup_seen";
     const seen = store.get(key);
     if (!seen || Date.now() > Number(seen)) {
-      const id = setTimeout(() => setOpen(true), 1500);
+      const id = setTimeout(() => { setOpen(true); track("signup_popup_shown"); }, 1500);
       return () => clearTimeout(id);
     }
   }, []);
@@ -43,7 +44,7 @@ export function SignupModal() {
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-gold/30 bg-gold/10 text-gold"><Icon name="gift" className="h-7 w-7" /></div>
         <h2 className="font-display text-2xl font-bold">{t("signup_title")}</h2>
         <p className="mt-3 text-sm leading-relaxed text-ivory/65">{t("signup_text")}</p>
-        <Link href="/connexion" onClick={() => close(30)} className="btn btn-gold mt-6 w-full">{t("signup_cta")}</Link>
+        <Link href="/connexion" onClick={() => { track("signup_cta_click"); close(30); }} className="btn btn-gold mt-6 w-full">{t("signup_cta")}</Link>
         <button onClick={() => close()} className="mt-3 w-full text-center text-sm text-ivory/50 hover:text-ivory">{t("signup_later")}</button>
       </div>
     </Shell>
@@ -55,7 +56,7 @@ export function QuoteModal({ open, onClose, preset }: { open: boolean; onClose: 
   const { t, lang } = useI18n();
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState("");
-  useEffect(() => { if (open) { setSent(false); setErr(""); } }, [open]);
+  useEffect(() => { if (open) { setSent(false); setErr(""); track("quote_modal_open", { label: preset || "global" }); } }, [open, preset]);
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -73,6 +74,8 @@ export function QuoteModal({ open, onClose, preset }: { open: boolean; onClose: 
       date: String(fd.get("date") || ""), place: String(fd.get("place") || ""),
       msg: String(fd.get("msg") || ""), source: "formulaire",
     }); // enregistrement admin (devis → /admin/devis), silencieux si hors-ligne
+    track("quote_sent", { label: preset || String(fd.get("offer") || "global") });
+    fbqEvent("Lead");
     const msg =
       `Bonjour Aklimasound, demande de devis :\n` +
       `• Nom : ${name}\n• Tél : ${phone}\n• Email : ${email || "-"}\n` +
@@ -133,6 +136,7 @@ export function BookingModal({ open, onClose, offer }: { open: boolean; onClose:
   const { send } = useWa();
   const [declare, setDeclare] = useState(false);
   const [declared, setDeclared] = useState<string | null>(null);
+  useEffect(() => { if (open) track("booking_modal_open", { label: offer?.name || "" }); }, [open, offer?.name]);
   const dep30 = offer?.price ? Math.round((offer.price * 0.3) / 500) * 500 : null;
   const dep50 = offer?.price ? Math.round((offer.price * 0.5) / 500) * 500 : null;
 
@@ -153,6 +157,8 @@ export function BookingModal({ open, onClose, offer }: { open: boolean; onClose:
     });
     store.set("aks_lead", JSON.stringify({ name, phone, email: String(fd.get("email") || "") }));
     setDeclared("ok");
+    track("deposit_declared", { label: offer?.name || "" });
+    fbqEvent("InitiateCheckout");
   };
 
   return (

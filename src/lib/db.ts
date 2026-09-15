@@ -19,8 +19,9 @@ export type DB = {
   bookings: Row[];
   products: Row[];
   notifications: Row[];
+  events: Row[];
 };
-export type Col = "leads" | "quotes" | "bookings" | "products" | "notifications";
+export type Col = "leads" | "quotes" | "bookings" | "products" | "notifications" | "events";
 
 const uid = () => Date.now().toString(36) + randomBytes(3).toString("hex");
 const days = (n: number) => new Date(Date.now() + n * 864e5).toISOString();
@@ -65,6 +66,7 @@ function seed(): DB {
       { id: uid(), createdAt: days(-0.2), icon: "badge", title: "Nouveau membre inscrit (réduction activée) : K. Agbeko", hot: false, read: false },
       { id: uid(), createdAt: days(-1), icon: "wrench", title: "Maintenance planifiée : caisson n°3 (membrane)", hot: false, read: true },
     ],
+    events: [],
   };
 }
 
@@ -74,6 +76,7 @@ export function db(): DB {
     try {
       cache = existsSync(FILE) ? (JSON.parse(readFileSync(FILE, "utf8")) as DB) : seed();
       if (!cache.settings?.secret) cache.settings.secret = randomBytes(32).toString("hex");
+      if (!Array.isArray(cache.events)) cache.events = []; // migration des bases créées avant le tracking
     } catch {
       cache = seed();
     }
@@ -92,11 +95,11 @@ export function persist() {
        La persistance réelle arrive avec Supabase (phase 1b). */
   }
 }
-export function addRow(col: Col, row: Record<string, unknown>): Row {
+export function addRow(col: Col, row: Record<string, unknown>, cap = 500): Row {
   const d = db();
   const full = { id: uid(), createdAt: new Date().toISOString(), ...row } as Row;
   d[col].unshift(full);
-  if (d[col].length > 500) d[col].length = 500;
+  if (d[col].length > cap) d[col].length = cap;
   persist();
   return full;
 }

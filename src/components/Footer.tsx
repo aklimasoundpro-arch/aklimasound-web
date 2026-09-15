@@ -18,10 +18,10 @@ export default function Footer() {
             </div>
           </div>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-ivory/60">{t("footer_about")}</p>
-          <p className="mt-3 text-sm text-ivory/60">{CONTACT.city[lang]} — <a className="hover:text-gold" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></p>
+          <p className="mt-3 text-sm text-ivory/60">{CONTACT.city[lang]} — <a className="hover:text-gold" data-track="email_click" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></p>
           <div className="mt-2 space-y-1 text-sm">
             {CONTACT.phones.map((p) => (
-              <a key={p.tel} href={`tel:${p.tel}`} className="flex items-center gap-2 text-ivory/70 transition hover:text-gold">
+              <a key={p.tel} href={`tel:${p.tel}`} data-track="phone_click" data-label={p.tel} className="flex items-center gap-2 text-ivory/70 transition hover:text-gold">
                 <Icon name="phone" className="h-3.5 w-3.5 text-gold/70" /> {p.display}
               </a>
             ))}
@@ -43,13 +43,13 @@ export default function Footer() {
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gold">{t("footer_social")}</p>
           <ul className="space-y-2 text-sm text-ivory/70">
             <li>
-              <a className="inline-flex items-center gap-2 hover:text-gold" href={CONTACT.tiktok} target="_blank" rel="noopener">
+              <a className="inline-flex items-center gap-2 hover:text-gold" data-track="social_click" data-label="tiktok" href={CONTACT.tiktok} target="_blank" rel="noopener">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-ivory/15 bg-white/5"><Icon name="music" className="h-4 w-4" /></span>
                 TikTok — @aklimasoundpro
               </a>
             </li>
             <li>
-              <a className="inline-flex items-center gap-2 hover:text-gold" href={CONTACT.instagram} target="_blank" rel="noopener">
+              <a className="inline-flex items-center gap-2 hover:text-gold" data-track="social_click" data-label="instagram" href={CONTACT.instagram} target="_blank" rel="noopener">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-ivory/15 bg-white/5"><Icon name="instagram" className="h-4 w-4" /></span>
                 Instagram — @aklimasoundpro
               </a>

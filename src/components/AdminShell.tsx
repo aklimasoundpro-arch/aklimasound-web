@@ -14,6 +14,7 @@ const NAV = [
   { href: "/admin/produits", i: "package", l: "Produits" },
   { href: "/admin/reglages", i: "gift", l: "Réductions" },
   { href: "/admin/notifications", i: "zap", l: "Notifications" },
+  { href: "/admin/historique", i: "clock", l: "Historique" },
 ];
 
 /** Coquille admin : garde de session + navigation latérale. */
