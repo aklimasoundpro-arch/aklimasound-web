@@ -54,9 +54,12 @@ export function WaProvider({ children }: { children: ReactNode }) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return setErr(fr ? "Adresse e-mail invalide." : "Invalid email address.");
     const lead: Lead = { name, phone, email };
     store.set("aks_lead", JSON.stringify(lead));
+    const lh: Record<string, string> = { "Content-Type": "application/json" };
+    try { const mt = store.get("aks_member_tok"); if (mt) lh["x-aks-member"] = mt; } catch { /* stockage indisponible */ }
     fetch("/api/public/leads", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: lh,
+      credentials: "include",
       body: JSON.stringify({ ...lead, source: "WhatsApp (porte)" }),
     }).catch(() => {}); // silencieux : n'impacte jamais le visiteur
     track("lead_captured", { label: "porte WhatsApp" });

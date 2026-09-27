@@ -38,18 +38,22 @@ export async function POST(req: Request) {
     if (typeof v === "string" || typeof v === "number") utm[str(k, 20)] = str(v, 80);
   }
 
-  addRow(
-    "events",
-    {
-      event,
-      vid: str(b.vid, 24),
-      page: str(b.page, 120),
-      label: str(b.label, 120),
-      ref: str(b.ref, 160),
-      utm,
-      lang: str(b.lang, 5),
-    },
-    5000
-  );
+  try {
+    await addRow(
+      "events",
+      {
+        event,
+        vid: str(b.vid, 24),
+        page: str(b.page, 120),
+        label: str(b.label, 120),
+        ref: str(b.ref, 160),
+        utm,
+        lang: str(b.lang, 5),
+      },
+      5000
+    );
+  } catch {
+    /* journalisation non critique : échec silencieux */
+  }
   return NextResponse.json({ ok: true });
 }

@@ -8,6 +8,7 @@ import { Icon, IconTile } from "@/components/icons";
 import { useWa } from "@/components/WaGate";
 import { useI18n } from "@/lib/i18n";
 import { track } from "@/lib/track";
+import { store } from "@/lib/store";
 import { CONTACT } from "@/lib/data";
 
 const FEATURES = [
@@ -51,9 +52,12 @@ export default function LogicsView() {
     const phone = String(fd.get("phone") || "").trim();
     if (name.length < 2 || (!email && !phone)) return setState("error");
     setState("sending");
+    const lh: Record<string, string> = { "Content-Type": "application/json" };
+    try { const mt = store.get("aks_member_tok"); if (mt) lh["x-aks-member"] = mt; } catch { /* stockage indisponible */ }
     fetch("/api/public/leads", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: lh,
+      credentials: "include",
       body: JSON.stringify({
         name, email, phone: phone || email,
         source: `LOGICS — accès anticipé (${String(fd.get("profile") || "-")})`,

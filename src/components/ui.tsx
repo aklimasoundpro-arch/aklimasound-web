@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 import { Offer, fcfa, waLink, CONTACT } from "@/lib/data";
 import { useI18n, L } from "@/lib/i18n";
+import { useMember, withDiscount } from "@/lib/member";
 import { Reveal } from "./motion";
 import { Icon } from "./icons";
 import { useWa } from "./WaGate";
@@ -22,6 +23,9 @@ export function PackCard({ offer, domainName, onQuote, onBook, delay = 0 }: {
 }) {
   const { t, lang } = useI18n();
   const { send } = useWa();
+  const { connected, discount } = useMember();
+  const memberOn = connected && discount > 0 && offer.price != null;
+  const eff = memberOn ? withDiscount(offer.price!, discount) : offer.price;
   const waMsg = `Bonjour Aklimasound, je souhaite réserver l'offre ${offer.name} (${domainName}) pour mon événement.`;
   return (
     <Reveal delay={delay} className="h-full">
@@ -29,8 +33,14 @@ export function PackCard({ offer, domainName, onQuote, onBook, delay = 0 }: {
         {offer.star && <span className="chip absolute -top-3 left-6 bg-ink">★ {t("popular")}</span>}
         <h3 className="font-display text-xl font-bold">{offer.name}</h3>
         <p className="mt-2 font-display text-2xl font-bold text-gradient-gold">
-          {offer.price ? fcfa(offer.price) : L(offer.priceLabel!, lang)}
+          {offer.price ? fcfa(eff!) : L(offer.priceLabel!, lang)}
         </p>
+        {memberOn && (
+          <p className="mt-0.5 text-[11px] font-semibold text-gold/85">
+            <s className="mr-1.5 font-normal text-ivory/40">{fcfa(offer.price!)}</s>
+            {lang === "fr" ? `Prix membre −${discount} %` : `Member price −${discount}%`}
+          </p>
+        )}
         <div className="mt-5 space-y-3 text-sm">
           <div>
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold/80">{t("includes")}</p>

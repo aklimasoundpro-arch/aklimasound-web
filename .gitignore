@@ -46,3 +46,6 @@ tsconfig.tsbuildinfo
 AGENTS.md
 CLAUDE.md
 .env*
+
+# Exception : le modèle de variables peut être committé
+!.env.example

@@ -7,10 +7,12 @@ import { DOMAINS, CONTACT, waLink } from "@/lib/data";
 import { useI18n } from "@/lib/i18n";
 import { Icon } from "./icons";
 import { useWa } from "./WaGate";
+import { useMember } from "@/lib/member";
 
 export default function Navbar({ onQuote }: { onQuote: () => void }) {
   const { t, lang, setLang } = useI18n();
   const { send } = useWa();
+  const { connected } = useMember();
   const [open, setOpen] = useState(false);
   const [svc, setSvc] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -74,7 +76,7 @@ export default function Navbar({ onQuote }: { onQuote: () => void }) {
               <button key={l} onClick={() => setLang(l)} className={`rounded-full px-2.5 py-1 uppercase transition ${lang === l ? "bg-gold text-black" : "text-ivory/60 hover:text-ivory"}`}>{l}</button>
             ))}
           </div>
-          <Link href="/connexion" className="text-sm text-ivory/70 hover:text-gold">{t("nav_login")}</Link>
+          <Link href={connected ? "/compte" : "/connexion"} className="text-sm text-ivory/70 hover:text-gold">{connected ? (lang === "fr" ? "Mon compte" : "My account") : t("nav_login")}</Link>
           <button onClick={onQuote} className="btn btn-gold !py-2.5 !px-5 text-sm">{t("cta_quote")}</button>
         </div>
 
@@ -96,7 +98,7 @@ export default function Navbar({ onQuote }: { onQuote: () => void }) {
           {links.map((l) => (
             <Link key={l.href} href={l.href} className="block rounded-xl px-3 py-2.5 text-sm text-ivory/90 hover:bg-gold/10">{l.label}</Link>
           ))}
-          <Link href="/connexion" className="block rounded-xl px-3 py-2.5 text-sm text-ivory/90 hover:bg-gold/10">{t("nav_login")}</Link>
+          <Link href={connected ? "/compte" : "/connexion"} className="block rounded-xl px-3 py-2.5 text-sm text-ivory/90 hover:bg-gold/10">{connected ? (lang === "fr" ? "Mon compte" : "My account") : t("nav_login")}</Link>
           <div className="mt-3 flex items-center gap-3">
             <div className="flex rounded-full border border-ivory/15 p-0.5 text-xs font-semibold">
               {(["fr", "en"] as const).map((l) => (

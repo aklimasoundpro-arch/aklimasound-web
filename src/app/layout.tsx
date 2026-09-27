@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { LangProvider } from "@/lib/i18n";
+import { MemberProvider } from "@/lib/member";
 import { WaProvider } from "@/components/WaGate";
 import { SiteTracker } from "@/components/SiteTracker";
 import { MetaPixel } from "@/components/MetaPixel";
@@ -56,10 +57,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
         <LangProvider>
           <WaProvider>
-            <SiteTracker />
-            <MetaPixel />
-            {children}
-            <CookieBanner />
+            <MemberProvider>
+              <SiteTracker />
+              <MetaPixel />
+              {children}
+              <CookieBanner />
+            </MemberProvider>
           </WaProvider>
         </LangProvider>
       </body>

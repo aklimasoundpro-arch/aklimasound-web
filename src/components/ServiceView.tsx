@@ -8,6 +8,7 @@ import { Reveal, BlurText } from "./motion";
 import { PackCard, Faq, SectionHead } from "./ui";
 import { Icon, IconTile } from "./icons";
 import { useWa } from "./WaGate";
+import { useMember, withDiscount } from "@/lib/member";
 import { QuoteModal, BookingModal } from "./Modals";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -22,6 +23,7 @@ const FAQS = [
 export default function ServiceView({ domain }: { domain: Domain }) {
   const { t, lang } = useI18n();
   const { send } = useWa();
+  const { connected, discount } = useMember();
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [preset, setPreset] = useState<string | undefined>();
   const [bookOffer, setBookOffer] = useState<{ name: string; price: number | null } | undefined>();
@@ -59,7 +61,7 @@ export default function ServiceView({ domain }: { domain: Domain }) {
               domainName={L(domain.name, lang)}
               delay={i * 0.1}
               onQuote={() => { setPreset(o.name); setQuoteOpen(true); }}
-              onBook={() => setBookOffer({ name: o.name, price: o.price })}
+              onBook={() => setBookOffer({ name: o.name, price: o.price != null ? withDiscount(o.price, connected ? discount : 0) : null })}
             />
           ))}
         </div>

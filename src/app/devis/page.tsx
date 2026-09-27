@@ -7,6 +7,7 @@ import { Reveal } from "@/components/motion";
 import { SectionHead } from "@/components/ui";
 import { Icon } from "@/components/icons";
 import { useWa } from "@/components/WaGate";
+import { useMember, withDiscount } from "@/lib/member";
 import { DOMAINS, CONTACT, waLink, fcfa } from "@/lib/data";
 import { useI18n, L } from "@/lib/i18n";
 import { store } from "@/lib/store";
@@ -23,6 +24,7 @@ const OPTIONS = [
 export default function Devis() {
   const { t, lang } = useI18n();
   const { send } = useWa();
+  const { connected, discount } = useMember();
   const [step, setStep] = useState(1);
   const [domain, setDomain] = useState<string>("");
   const [date, setDate] = useState("");
@@ -37,10 +39,12 @@ export default function Devis() {
     if (!d) return null;
     return d.offers.find((o) => o.cap >= guests) ?? d.offers[d.offers.length - 1];
   }, [d, guests]);
-  const total = useMemo(() => {
+  const baseTotal = useMemo(() => {
     if (!rec) return 0;
     return (rec.price ?? 1000000) + opts.reduce((s, id) => s + (OPTIONS.find((o) => o.id === id)?.price ?? 0), 0);
   }, [rec, opts]);
+  // Prix membre automatique pour les visiteurs connectés (arrondi au billet de 500 F)
+  const total = connected && discount > 0 ? withDiscount(baseTotal, discount) : baseTotal;
 
   const summaryMsg =
     `Bonjour Aklimasound, estimation simulateur :\n` +
@@ -126,6 +130,12 @@ export default function Devis() {
                   <p className="mt-1 font-display text-2xl font-bold">{rec.name}</p>
                   <p className="mt-1 text-sm text-ivory/70">{L(rec.includes, lang)}</p>
                   <p className="mt-3 font-display text-xl font-bold text-gradient-gold">{fcfa(total)}</p>
+                  {connected && discount > 0 && (
+                    <p className="mt-0.5 text-[11px] font-semibold text-gold/85">
+                      <s className="mr-1.5 font-normal text-ivory/40">{fcfa(baseTotal)}</s>
+                      {lang === "fr" ? `Estimation membre −${discount} %` : `Member estimate −${discount}%`}
+                    </p>
+                  )}
                   <p className="mt-1 text-[11px] text-ivory/50">{lang === "fr" ? "Estimation non contractuelle, frais Mobile Money inclus. Acompte 30 % ou 50 %." : "Non-binding estimate, Mobile Money fees included. 30% or 50% deposit."}</p>
                 </div>
                 <ul className="space-y-1 text-sm text-ivory/70">

@@ -16,7 +16,11 @@ async function tokFrom(req: Request) {
 }
 
 export async function GET(req: Request) {
-  return NextResponse.json({ ok: verifyToken(await tokFrom(req)) }, { headers: { "Cache-Control": "no-store" } });
+  try {
+    return NextResponse.json({ ok: await verifyToken(await tokFrom(req)) }, { headers: { "Cache-Control": "no-store" } });
+  } catch {
+    return NextResponse.json({ ok: false }, { status: 502 });
+  }
 }
 
 export async function POST(req: Request) {
@@ -32,39 +36,45 @@ export async function POST(req: Request) {
   const { action } = body;
   const jar = await cookies();
 
-  if (action === "login") {
-    if (!rateOk(`login:${ip}`, 10, 120_000)) {
-      return NextResponse.json({ ok: false, error: "Trop de tentatives. Réessayez dans 2 minutes." }, { status: 429 });
+  try {
+    if (action === "login") {
+      if (!rateOk(`login:${ip}`, 10, 120_000)) {
+        return NextResponse.json({ ok: false, error: "Trop de tentatives. Réessayez dans 2 minutes." }, { status: 429 });
+      }
+      if (!(await verifyPass(String(body.password ?? "")))) {
+        return NextResponse.json({ ok: false, error: "Mot de passe incorrect." }, { status: 401 });
+      }
+      rateReset(`login:${ip}`);
+      const tok = await makeToken();
+      jar.set(COOKIE, tok, {
+        httpOnly: true, sameSite: "lax", path: "/",
+        maxAge: 7 * 86400, secure: process.env.NODE_ENV === "production",
+      });
+      return NextResponse.json({ ok: true, token: tok });
     }
-    if (!verifyPass(String(body.password ?? ""))) {
-      return NextResponse.json({ ok: false, error: "Mot de passe incorrect." }, { status: 401 });
+
+    if (action === "logout") {
+      jar.delete(COOKIE);
+      return NextResponse.json({ ok: true });
     }
-    rateReset(`login:${ip}`);
-    const tok = makeToken();
-    jar.set(COOKIE, tok, {
-      httpOnly: true, sameSite: "lax", path: "/",
-      maxAge: 7 * 86400, secure: process.env.NODE_ENV === "production",
-    });
-    return NextResponse.json({ ok: true, token: tok });
-  }
 
-  if (action === "logout") {
-    jar.delete(COOKIE);
-    return NextResponse.json({ ok: true });
-  }
-
-  if (action === "password") {
-    if (!verifyToken(await tokFrom(req))) return NextResponse.json({ ok: false }, { status: 401 });
-    if (!verifyPass(String(body.current ?? ""))) return NextResponse.json({ ok: false, error: "Mot de passe actuel incorrect." }, { status: 401 });
-    const next = String(body.next ?? "");
-    if (next.length < 10 || !/[A-Z]/.test(next) || !/[0-9]/.test(next)) {
-      return NextResponse.json({ ok: false, error: "Nouveau mot de passe : 10 caractères min., 1 majuscule, 1 chiffre." }, { status: 400 });
+    if (action === "password") {
+      if (!(await verifyToken(await tokFrom(req)))) return NextResponse.json({ ok: false }, { status: 401 });
+      if (!(await verifyPass(String(body.current ?? "")))) {
+        return NextResponse.json({ ok: false, error: "Mot de passe actuel incorrect." }, { status: 401 });
+      }
+      const next = String(body.next ?? "");
+      if (next.length < 10 || !/[A-Z]/.test(next) || !/[0-9]/.test(next)) {
+        return NextResponse.json({ ok: false, error: "Nouveau mot de passe : 10 caractères min., 1 majuscule, 1 chiffre." }, { status: 400 });
+      }
+      await setPassword(next);
+      const tok = await makeToken();
+      jar.set(COOKIE, tok, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 7 * 86400, secure: process.env.NODE_ENV === "production" });
+      return NextResponse.json({ ok: true, token: tok });
     }
-    setPassword(next);
-    const tok = makeToken();
-    jar.set(COOKIE, tok, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 7 * 86400, secure: process.env.NODE_ENV === "production" });
-    return NextResponse.json({ ok: true, token: tok });
-  }
 
-  return NextResponse.json({ ok: false, error: "Action inconnue." }, { status: 400 });
+    return NextResponse.json({ ok: false, error: "Action inconnue." }, { status: 400 });
+  } catch {
+    return NextResponse.json({ ok: false, error: "Service temporairement indisponible." }, { status: 502 });
+  }
 }

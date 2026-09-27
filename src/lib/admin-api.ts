@@ -76,8 +76,14 @@ export const api = {
   patch: (col: string, id: string, patch: Record<string, unknown>) => req(`/api/admin/${col}`, { method: "PATCH", ...j({ id, ...patch }) }),
   del: (col: string, id: string) => req(`/api/admin/${col}?id=${encodeURIComponent(id)}`, { method: "DELETE" }),
 
-  /** Soumissions publiques (site) — ne lève jamais : échec silencieux côté visiteur. */
+  /** Soumissions publiques (site) — ne lève jamais : échec silencieux côté visiteur.
+   *  Le jeton membre (si connecté) est joint pour rattacher la demande au compte. */
   pub: (col: "leads" | "quotes" | "bookings", body: Record<string, unknown>) => {
-    fetch(`/api/public/${col}`, { method: "POST", ...j(body) }).catch(() => {});
+    const h: Record<string, string> = { "Content-Type": "application/json" };
+    try {
+      const mt = store.get("aks_member_tok");
+      if (mt) h["x-aks-member"] = mt;
+    } catch { /* stockage indisponible */ }
+    fetch(`/api/public/${col}`, { method: "POST", headers: h, credentials: "include", body: JSON.stringify(body) }).catch(() => {});
   },
 };

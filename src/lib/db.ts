@@ -1,19 +1,23 @@
 /**
- * Base locale Aklimasound — fichier JSON persistant (data/db.json).
+ * Couche de données Aklimasound — adaptateur double mode :
+ *  • Supabase branché (SUPABASE_URL + SUPABASE_SERVICE_KEY) → persistance réelle,
+ *    accès 100 % serveur avec la clé service_role ; RLS refuse tout accès direct.
+ *  • Sinon → fichier JSON local (data/db.json) pour la démo/preview.
  * Importé UNIQUEMENT par les route handlers serveur (jamais côté client).
- * Phase 1b : cette couche sera remplacée par Supabase sans toucher aux pages.
  */
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
+import { supa } from "./supabase";
 
 const FILE = join(process.cwd(), "data", "db.json");
 export const COOKIE = "aks_admin";
+export const MEMBER_COOKIE = "aks_member";
 export const DEFAULT_PASSWORD = "Aklima@2026"; // à changer dans Réglages après 1ère connexion
 
 export type Row = Record<string, unknown> & { id: string; createdAt: string };
 export type DB = {
-  settings: { passHash: string; passSalt: string; secret: string; memberDiscount: number };
+  settings: { passHash: string; passSalt: string; secret: string; memberSecret?: string; memberDiscount: number };
   leads: Row[];
   quotes: Row[];
   bookings: Row[];
@@ -26,6 +30,8 @@ export type Col = "leads" | "quotes" | "bookings" | "products" | "notifications"
 const uid = () => Date.now().toString(36) + randomBytes(3).toString("hex");
 const days = (n: number) => new Date(Date.now() + n * 864e5).toISOString();
 
+/* ============================ MODE LOCAL (démo) ============================ */
+
 function seed(): DB {
   const passSalt = randomBytes(16).toString("hex");
   return {
@@ -33,6 +39,7 @@ function seed(): DB {
       passHash: scryptSync(DEFAULT_PASSWORD, passSalt, 32).toString("hex"),
       passSalt,
       secret: randomBytes(32).toString("hex"),
+      memberSecret: randomBytes(32).toString("hex"),
       memberDiscount: 10,
     },
     leads: [
@@ -71,12 +78,13 @@ function seed(): DB {
 }
 
 let cache: DB | null = null;
-export function db(): DB {
+function db(): DB {
   if (!cache) {
     try {
       cache = existsSync(FILE) ? (JSON.parse(readFileSync(FILE, "utf8")) as DB) : seed();
       if (!cache.settings?.secret) cache.settings.secret = randomBytes(32).toString("hex");
-      if (!Array.isArray(cache.events)) cache.events = []; // migration des bases créées avant le tracking
+      if (!cache.settings?.memberSecret) cache.settings.memberSecret = randomBytes(32).toString("hex");
+      if (!Array.isArray(cache.events)) cache.events = [];
     } catch {
       cache = seed();
     }
@@ -84,39 +92,97 @@ export function db(): DB {
   }
   return cache;
 }
-export function persist() {
-  if (!cache) return;
+function persist() {
+  if (!cache || supa()) return; // jamais d'écriture locale quand Supabase est branché
   try {
     mkdirSync(dirname(FILE), { recursive: true });
     writeFileSync(FILE, JSON.stringify(cache, null, 2));
   } catch {
-    /* Système de fichiers en lecture seule (Netlify/serverless) :
-       l'admin fonctionne alors en mode mémoire — non persistant.
-       La persistance réelle arrive avec Supabase (phase 1b). */
+    /* Système de fichiers en lecture seule : mode mémoire (démo). */
   }
 }
-export function addRow(col: Col, row: Record<string, unknown>, cap = 500): Row {
+
+/* ==================== Bascules camelCase ↔ snake_case ==================== */
+
+const snake = (k: string) => k.replace(/[A-Z]/g, (m) => "_" + m.toLowerCase());
+const camel = (k: string) => k.replace(/_([a-z0-9])/g, (_, c: string) => c.toUpperCase());
+const toSupa = (o: Record<string, unknown>) =>
+  Object.fromEntries(Object.entries(o).map(([k, v]) => [snake(k), v]));
+const fromSupa = (o: Record<string, unknown>) =>
+  Object.fromEntries(Object.entries(o).map(([k, v]) => [camel(k), v])) as Row;
+
+const DANGER = new Set(["__proto__", "constructor", "prototype"]);
+
+function cleanRow(row: Record<string, unknown>, keepId = false): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(row)) {
+    if (DANGER.has(k)) continue;
+    if (!keepId && (k === "id" || k === "createdAt")) continue; // champs immuables côté serveur
+    if (keepId && (k === "id" || k === "createdAt" || k === "updatedAt")) continue;
+    out[k] = v;
+  }
+  return out;
+}
+
+/* ============================ CRUD unifié ============================ */
+
+export async function listRows(col: Col, limit = 500): Promise<Row[]> {
+  const s = supa();
+  if (s) {
+    const { data, error } = await s
+      .from(col)
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(col === "events" ? 5000 : limit);
+    if (error) throw new Error(`list ${col}: ${error.message}`);
+    return ((data ?? []) as Record<string, unknown>[]).map(fromSupa);
+  }
+  return db()[col].slice(0, col === "events" ? 5000 : limit);
+}
+
+export async function addRow(col: Col, row: Record<string, unknown>, cap = 500): Promise<Row> {
+  const clean = cleanRow(row);
+  const s = supa();
+  if (s) {
+    const { data, error } = await s.from(col).insert(toSupa(clean)).select().single();
+    if (error) throw new Error(`insert ${col}: ${error.message}`);
+    return fromSupa(data as Record<string, unknown>);
+  }
   const d = db();
   // id/createdAt APRÈS le spread : le client ne peut jamais les écraser
-  const full = { ...row, id: uid(), createdAt: new Date().toISOString() } as Row;
+  const full = { ...clean, id: uid(), createdAt: new Date().toISOString() } as Row;
   d[col].unshift(full);
   if (d[col].length > cap) d[col].length = cap;
   persist();
   return full;
 }
-export function patchRow(col: Col, id: string, patch: Record<string, unknown>): Row | null {
+
+export async function patchRow(col: Col, id: string, patch: Record<string, unknown>): Promise<Row | null> {
+  const clean = cleanRow(patch, true);
+  const s = supa();
+  if (s) {
+    const { data, error } = await s.from(col).update(toSupa(clean)).eq("id", id).select().single();
+    if (error) {
+      if (error.code === "PGRST116") return null; // aucune ligne → introuvable
+      throw new Error(`patch ${col}: ${error.message}`);
+    }
+    return fromSupa(data as Record<string, unknown>);
+  }
   const d = db();
   const r = d[col].find((x) => x.id === id);
   if (!r) return null;
-  // Double protection anti-pollution : on ne copie que les clés propres non dangereuses
-  for (const k of Object.keys(patch)) {
-    if (k === "__proto__" || k === "constructor" || k === "prototype" || k === "id") continue;
-    (r as Record<string, unknown>)[k] = patch[k];
-  }
+  for (const [k, v] of Object.entries(clean)) (r as Record<string, unknown>)[k] = v;
   persist();
   return r;
 }
-export function delRow(col: Col, id: string): boolean {
+
+export async function delRow(col: Col, id: string): Promise<boolean> {
+  const s = supa();
+  if (s) {
+    const { data, error } = await s.from(col).delete().eq("id", id).select("id");
+    if (error) throw new Error(`delete ${col}: ${error.message}`);
+    return (data ?? []).length > 0;
+  }
   const d = db();
   const i = d[col].findIndex((x) => x.id === id);
   if (i < 0) return false;
@@ -124,44 +190,152 @@ export function delRow(col: Col, id: string): boolean {
   persist();
   return true;
 }
-export function notify(title: string, icon = "zap", hot = true) {
+
+export async function notify(title: string, icon = "zap", hot = true) {
+  const s = supa();
+  if (s) {
+    const { error } = await s.from("notifications").insert({ icon, title: title.slice(0, 200), hot, read: false });
+    if (error) throw new Error(`notify: ${error.message}`);
+    return;
+    // Phase suivante : envoi Brevo API ici pour les notifications critiques (devis, acompte, J-1).
+  }
   db().notifications.unshift({ id: uid(), createdAt: new Date().toISOString(), icon, title, hot, read: false } as Row);
   persist();
-  // Phase 1b : envoi Brevo ici pour les notifications critiques (devis, acompte, J-1).
 }
 
-/* ---------- Authentification admin ---------- */
+/* ============================ Réglages ============================ */
+
+export type Settings = {
+  passHash: string;
+  passSalt: string;
+  adminSecret: string;
+  memberSecret: string;
+  memberDiscount: number;
+};
+let sCache: Settings | null = null;
+
+export async function getSettings(): Promise<Settings> {
+  if (sCache) return sCache;
+  const s = supa();
+  if (s) {
+    let { data } = await s.from("settings").select("*").eq("id", 1).maybeSingle();
+    if (!data) {
+      await s.from("settings").insert({ id: 1 });
+      ({ data } = await s.from("settings").select("*").eq("id", 1).maybeSingle());
+    }
+    const st = (data ?? {}) as Record<string, unknown>;
+    const patch: Record<string, string> = {};
+    if (!st.pass_hash || !st.pass_salt) {
+      const salt = randomBytes(16).toString("hex");
+      patch.pass_salt = salt;
+      patch.pass_hash = scryptSync(DEFAULT_PASSWORD, salt, 32).toString("hex");
+    }
+    if (!st.admin_secret) patch.admin_secret = randomBytes(32).toString("hex");
+    if (!st.member_secret) patch.member_secret = randomBytes(32).toString("hex");
+    if (Object.keys(patch).length) await s.from("settings").update(patch).eq("id", 1);
+    sCache = {
+      passHash: String(patch.pass_hash ?? st.pass_hash ?? ""),
+      passSalt: String(patch.pass_salt ?? st.pass_salt ?? ""),
+      adminSecret: String(patch.admin_secret ?? st.admin_secret ?? ""),
+      memberSecret: String(patch.member_secret ?? st.member_secret ?? ""),
+      memberDiscount: Number(st.member_discount ?? 10),
+    };
+    return sCache;
+  }
+  const st = db().settings;
+  sCache = {
+    passHash: st.passHash,
+    passSalt: st.passSalt,
+    adminSecret: st.secret,
+    memberSecret: st.memberSecret!,
+    memberDiscount: st.memberDiscount,
+  };
+  return sCache;
+}
+
+export async function setMemberDiscount(n: number) {
+  const s = supa();
+  if (s) await s.from("settings").update({ member_discount: n }).eq("id", 1);
+  else {
+    db().settings.memberDiscount = n;
+    persist();
+  }
+  if (sCache) sCache.memberDiscount = n;
+}
+
+/* ====================== Authentification admin (scrypt) ====================== */
+
 export function hashPass(pass: string, salt: string) {
   return scryptSync(pass, salt, 32).toString("hex");
 }
-export function verifyPass(pass: string): boolean {
-  const s = db().settings;
-  const h = Buffer.from(hashPass(pass, s.passSalt), "hex");
-  const t = Buffer.from(s.passHash, "hex");
+
+export async function verifyPass(pass: string): Promise<boolean> {
+  const { passHash, passSalt } = await getSettings();
+  const h = Buffer.from(hashPass(pass, passSalt), "hex");
+  const t = Buffer.from(passHash, "hex");
   return h.length === t.length && timingSafeEqual(h, t);
 }
-export function setPassword(pass: string) {
-  const s = db().settings;
-  s.passSalt = randomBytes(16).toString("hex");
-  s.passHash = hashPass(pass, s.passSalt);
-  persist();
+
+export async function setPassword(pass: string) {
+  const salt = randomBytes(16).toString("hex");
+  const hash = hashPass(pass, salt);
+  const s = supa();
+  if (s) await s.from("settings").update({ pass_salt: salt, pass_hash: hash }).eq("id", 1);
+  else {
+    const st = db().settings;
+    st.passSalt = salt;
+    st.passHash = hash;
+    persist();
+  }
+  if (sCache) {
+    sCache.passSalt = salt;
+    sCache.passHash = hash;
+  }
 }
-export function makeToken(): string {
+
+/* ============================ Jetons signés (HMAC) ============================ */
+
+const sign = (secret: string, msg: string) => createHmac("sha256", secret).update(msg).digest("hex");
+const safeEqual = (a: string, b: string) => {
+  const ba = Buffer.from(a, "hex");
+  const bb = Buffer.from(b, "hex");
+  return ba.length === bb.length && timingSafeEqual(ba, bb);
+};
+
+export async function makeToken(): Promise<string> {
+  const { adminSecret } = await getSettings();
   const exp = Date.now() + 7 * 864e5; // 7 jours
-  const sig = createHmac("sha256", db().settings.secret).update(String(exp)).digest("hex");
-  return `${exp}.${sig}`;
+  return `${exp}.${sign(adminSecret, String(exp))}`;
 }
-export function verifyToken(tok: string | undefined): boolean {
+
+export async function verifyToken(tok: string | undefined): Promise<boolean> {
   if (!tok) return false;
   const [exp, sig] = tok.split(".");
   if (!exp || !sig || Number(exp) < Date.now()) return false;
-  const want = createHmac("sha256", db().settings.secret).update(exp).digest("hex");
-  const a = Buffer.from(sig, "hex");
-  const b = Buffer.from(want, "hex");
-  return a.length === b.length && timingSafeEqual(a, b);
+  const { adminSecret } = await getSettings();
+  return safeEqual(sig, sign(adminSecret, exp));
 }
 
-/* ---------- Anti-spam public (limiteur mémoire simple) ---------- */
+/** Jeton membre : `{userId}.{exp}.{sig}` — 30 jours, secret distinct de l'admin. */
+export async function makeMemberToken(userId: string): Promise<string> {
+  const { memberSecret } = await getSettings();
+  const exp = Date.now() + 30 * 864e5;
+  return `${userId}.${exp}.${sign(memberSecret, `${userId}.${exp}`)}`;
+}
+
+export async function verifyMemberToken(tok: string | undefined): Promise<string | null> {
+  if (!tok) return null;
+  const parts = tok.split(".");
+  if (parts.length !== 3) return null;
+  const [userId, exp, sig] = parts;
+  if (!userId || !exp || !sig || Number(exp) < Date.now()) return null;
+  if (!/^[0-9a-fA-F-]{36}$/.test(userId)) return null; // UUID attendu
+  const { memberSecret } = await getSettings();
+  return safeEqual(sig, sign(memberSecret, `${userId}.${exp}`)) ? userId : null;
+}
+
+/* ==================== Anti-spam public (limiteur mémoire) ==================== */
+
 const hits = new Map<string, { n: number; t: number }>();
 export function rateReset(key: string) {
   hits.delete(key);
