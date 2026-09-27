@@ -44,13 +44,13 @@ export default function Footer() {
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gold">{t("footer_social")}</p>
           <ul className="space-y-2 text-sm text-ivory/70">
             <li>
-              <a className="inline-flex items-center gap-2 hover:text-gold" data-track="social_click" data-label="tiktok" href={CONTACT.tiktok} target="_blank" rel="noopener">
+              <a className="inline-flex items-center gap-2 hover:text-gold" data-track="social_click" data-label="tiktok" href={CONTACT.tiktok} target="_blank" rel="noopener noreferrer">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-ivory/15 bg-white/5"><Icon name="music" className="h-4 w-4" /></span>
                 TikTok — @aklimasoundpro
               </a>
             </li>
             <li>
-              <a className="inline-flex items-center gap-2 hover:text-gold" data-track="social_click" data-label="instagram" href={CONTACT.instagram} target="_blank" rel="noopener">
+              <a className="inline-flex items-center gap-2 hover:text-gold" data-track="social_click" data-label="instagram" href={CONTACT.instagram} target="_blank" rel="noopener noreferrer">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-ivory/15 bg-white/5"><Icon name="instagram" className="h-4 w-4" /></span>
                 Instagram — @aklimasoundpro
               </a>

@@ -33,7 +33,7 @@ export default function AdminLogin() {
           <p className="mt-1 text-xs text-ivory/50">Accès réservé à l'équipe Aklimasound</p>
         </div>
         <form onSubmit={submit} className="space-y-3">
-          <input className="input" type="password" name="password" placeholder="Mot de passe" autoFocus autoComplete="current-password" />
+          <input className="input" type="password" name="password" placeholder="Mot de passe" maxLength={128} autoFocus autoComplete="current-password" />
           {err && <p className="text-sm text-live">{err}</p>}
           <button className="btn btn-gold w-full" disabled={busy}>
             <Icon name="check" className="h-4 w-4" /> {busy ? "Connexion…" : "Se connecter"}

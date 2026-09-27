@@ -16,6 +16,10 @@ export async function POST(req: Request, ctx: { params: Promise<{ col: string }>
   if (!rateOk(`pub:${col}:${ip}`, 6, 60_000)) {
     return NextResponse.json({ ok: false, error: "Trop de demandes. Réessayez dans une minute." }, { status: 429 });
   }
+  // Anti-DoS : corps de requête borné (formulaires normaux < 2 Ko)
+  if (Number(req.headers.get("content-length") ?? 0) > 100_000) {
+    return NextResponse.json({ ok: false, error: "Charge trop volumineuse." }, { status: 413 });
+  }
   const b = await req.json().catch(() => null) as Record<string, unknown> | null;
   if (!b || str(b.website, 20)) return NextResponse.json({ ok: false }, { status: 400 }); // honeypot
 

@@ -82,7 +82,7 @@ export function QuoteModal({ open, onClose, preset, wa }: { open: boolean; onClo
       `• Formule : ${preset || fd.get("offer")}\n` +
       `• Date : ${fd.get("date") || "à définir"}\n• Lieu : ${fd.get("place") || "-"}\n` +
       `• Message : ${fd.get("msg") || "-"}`;
-    window.open(waLink(wa || CONTACT.wa1, msg), "_blank");
+    window.open(waLink(wa || CONTACT.wa1, msg), "_blank", "noopener,noreferrer");
     setSent(true);
   };
 

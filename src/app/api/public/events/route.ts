@@ -12,6 +12,8 @@ const str = (v: unknown, max: number) => String(v ?? "").trim().slice(0, max);
 export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for") ?? "local";
   if (!rateOk(`ev:${ip}`, 120, 60_000)) return NextResponse.json({ ok: false }, { status: 429 });
+  // Anti-DoS : événements bornés (< 1 Ko normalement)
+  if (Number(req.headers.get("content-length") ?? 0) > 20_000) return NextResponse.json({ ok: false }, { status: 413 });
   const b = (await req.json().catch(() => null)) as Record<string, unknown> | null;
   if (!b) return NextResponse.json({ ok: false }, { status: 400 });
 

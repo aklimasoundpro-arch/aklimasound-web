@@ -185,7 +185,7 @@ export default function Home() {
                     ? "Partagez-la, affichez-la : faites vibrer votre événement avec Aklimasound, la puissance du son pro à votre portée."
                     : "Share it, post it: make your event vibrate with Aklimasound, pro sound power within your reach."}
                 </p>
-                <a href="/img/affiche-sono-1.jpg" target="_blank" rel="noopener" className="btn btn-outline mt-5">
+                <a href="/img/affiche-sono-1.jpg" target="_blank" rel="noopener noreferrer" className="btn btn-outline mt-5">
                   <Icon name="camera" className="h-4 w-4" /> {lang === "fr" ? "Voir / télécharger l'affiche" : "View / download the poster"}
                 </a>
               </div>

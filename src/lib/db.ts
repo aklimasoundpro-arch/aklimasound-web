@@ -97,7 +97,8 @@ export function persist() {
 }
 export function addRow(col: Col, row: Record<string, unknown>, cap = 500): Row {
   const d = db();
-  const full = { id: uid(), createdAt: new Date().toISOString(), ...row } as Row;
+  // id/createdAt APRÈS le spread : le client ne peut jamais les écraser
+  const full = { ...row, id: uid(), createdAt: new Date().toISOString() } as Row;
   d[col].unshift(full);
   if (d[col].length > cap) d[col].length = cap;
   persist();
@@ -107,7 +108,11 @@ export function patchRow(col: Col, id: string, patch: Record<string, unknown>): 
   const d = db();
   const r = d[col].find((x) => x.id === id);
   if (!r) return null;
-  Object.assign(r, patch);
+  // Double protection anti-pollution : on ne copie que les clés propres non dangereuses
+  for (const k of Object.keys(patch)) {
+    if (k === "__proto__" || k === "constructor" || k === "prototype" || k === "id") continue;
+    (r as Record<string, unknown>)[k] = patch[k];
+  }
   persist();
   return r;
 }

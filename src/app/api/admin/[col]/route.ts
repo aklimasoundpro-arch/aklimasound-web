@@ -40,11 +40,16 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ col: string }
   const { col } = await ctx.params;
   const body = await req.json().catch(() => null);
   if (!body || typeof body !== "object") return NextResponse.json({ error: "corps invalide" }, { status: 400 });
-  const { id, ...patch } = body as Record<string, unknown> & { id?: string };
+  const { id, ...rest } = body as Record<string, unknown> & { id?: string };
+
+  // Durcissement : clés dangereuses (pollution de prototype) et champs immuables rejetés
+  const DANGER = new Set(["__proto__", "constructor", "prototype", "createdAt"]);
+  const patch: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(rest)) if (!DANGER.has(k)) patch[k] = v;
 
   if (col === "settings") {
     const d = db();
-    if (typeof patch.memberDiscount === "number" && patch.memberDiscount >= 0 && patch.memberDiscount <= 50) {
+    if (typeof patch.memberDiscount === "number" && Number.isFinite(patch.memberDiscount) && patch.memberDiscount >= 0 && patch.memberDiscount <= 50) {
       d.settings.memberDiscount = Math.round(patch.memberDiscount);
       persist();
       notify(`Réduction membre réglée à ${d.settings.memberDiscount} %`, "badge", false);
@@ -53,7 +58,13 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ col: string }
   }
   if (!COLS.includes(col as Col) || !id) return NextResponse.json({ error: "demande invalide" }, { status: 400 });
 
+  // Statuts valides uniquement (intégrité des données + kanban)
+  const BOOKING_STATUS = ["deposit_proof", "confirmed", "ongoing", "done", "cancelled"];
+  const QUOTE_STATUS = ["nouveau", "envoyé", "accepté", "refusé"];
   const c = col as Col;
+  if (c === "bookings" && patch.status !== undefined && !BOOKING_STATUS.includes(String(patch.status))) delete patch.status;
+  if (c === "quotes" && patch.status !== undefined && !QUOTE_STATUS.includes(String(patch.status))) delete patch.status;
+
   // effets métier
   if (c === "bookings" && patch.status === "confirmed") {
     notify("Acompte validé — réservation confirmée, date bloquée", "check", false);

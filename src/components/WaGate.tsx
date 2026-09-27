@@ -29,7 +29,7 @@ export function WaProvider({ children }: { children: ReactNode }) {
       : msg;
     track("whatsapp_open", { label: msg.split("\n")[0].slice(0, 100), known: !!lead });
     fbqEvent("Contact");
-    window.open(waLink(to || CONTACT.wa1, full), "_blank", "noopener");
+    window.open(waLink(to || CONTACT.wa1, full), "_blank", "noopener,noreferrer");
   };
 
   const send = (msg: string, to?: string) => {
