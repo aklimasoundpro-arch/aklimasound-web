@@ -8,15 +8,8 @@ import { Reveal } from "@/components/motion";
 import { SectionHead } from "@/components/ui";
 import { Icon, IconTile } from "@/components/icons";
 import { useWa } from "@/components/WaGate";
-import { CONTACT, waLink } from "@/lib/data";
 import { useI18n } from "@/lib/i18n";
-
-const CATS = [
-  { icon: "speaker", t: { fr: "Enceintes & caissons", en: "Speakers & subwoofers" }, d: { fr: "Enceintes de sonorisation, caissons de basse, line array compact.", en: "PA speakers, subwoofers, compact line array." } },
-  { icon: "sliders", t: { fr: "Consoles de mixage", en: "Mixing consoles" }, d: { fr: "Consoles numériques et analogiques, racks de traitement.", en: "Digital and analogue consoles, processing racks." } },
-  { icon: "mic", t: { fr: "Micros filaires & HF", en: "Wired & wireless mics" }, d: { fr: "Micros chant, pupitre, casques/cravates, systèmes HF complets.", en: "Vocal, podium, headset/lavalier mics, full HF systems." } },
-  { icon: "cable", t: { fr: "Traitement & câblage", en: "Processing & cabling" }, d: { fr: "Traitements acoustiques, multipaires, câblage professionnel.", en: "Acoustic treatment, stage boxes, professional cabling." } },
-];
+import { track } from "@/lib/track";
 
 const INSTALL = [
   { icon: "church", t: { fr: "Églises & lieux de culte", en: "Churches & worship venues" }, d: { fr: "Correction d'écho, réglages anti-larsen, sonorisation multi-zones auditorium + esplanade.", en: "Echo correction, anti-feedback tuning, multi-zone sound for auditorium + esplanade." } },
@@ -29,15 +22,26 @@ export default function Materiel() {
   const { send } = useWa();
   const [open, setOpen] = useState(false);
   const L2 = (v: { fr: string; en: string }) => v[lang];
+  const fr = lang === "fr";
+
+  const askStudy = () => {
+    track("study_request_click", { label: "installation fixe" });
+    send(
+      fr
+        ? "Bonjour Aklimasound, je souhaite demander une étude pour une installation fixe (lieu, surface et besoin à préciser)."
+        : "Hello Aklimasound, I would like to request a study for a fixed installation (venue, size and needs to be defined)."
+    );
+  };
+
   return (
     <>
       <Navbar onQuote={() => setOpen(true)} />
-      <QuoteModal open={open} onClose={() => setOpen(false)} preset={lang === "fr" ? "Étude vente / installation" : "Sales / installation study"} />
+      <QuoteModal open={open} onClose={() => setOpen(false)} preset={fr ? "Étude installation fixe" : "Fixed installation study"} />
       <section className="mx-auto max-w-7xl px-6 pb-24 pt-32">
         <SectionHead
-          kicker={lang === "fr" ? "Boutique pro" : "Pro shop"}
-          title={lang === "fr" ? "Vente de matériel & intégration acoustique" : "Equipment sales & acoustic integration"}
-          sub={lang === "fr" ? "Fourniture, installation fixe sur-mesure, formation de vos équipes et maintenance préventive." : "Supply, bespoke fixed installation, team training and preventive maintenance."}
+          kicker={fr ? "Matériel & intégration" : "Equipment & integration"}
+          title={fr ? "Installation fixe sur-mesure — et bientôt la boutique" : "Bespoke fixed installation — shop coming soon"}
+          sub={fr ? "Étude acoustique, fourniture, installation, formation de vos équipes et maintenance préventive, partout au Togo." : "Acoustic study, supply, installation, team training and preventive maintenance, across Togo."}
         />
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
           <Reveal>
@@ -51,20 +55,10 @@ export default function Materiel() {
             </div>
           </Reveal>
         </div>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {CATS.map((c, i) => (
-            <Reveal key={i} delay={i * 0.07}>
-              <div className="glass card-hover h-full rounded-3xl p-6">
-                <IconTile name={c.icon} />
-                <h3 className="mt-4 font-display font-bold">{L2(c.t)}</h3>
-                <p className="mt-2 text-sm text-ivory/60">{L2(c.d)}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
 
+        {/* ---- Installation fixe (activée) ---- */}
         <div className="mt-20">
-          <SectionHead title={lang === "fr" ? "Installation fixe & configuration sur-mesure" : "Fixed installation & bespoke configuration"} />
+          <SectionHead title={fr ? "Installation fixe & configuration sur-mesure" : "Fixed installation & bespoke configuration"} />
           <div className="mt-10 grid gap-5 lg:grid-cols-3">
             {INSTALL.map((c, i) => (
               <Reveal key={i} delay={i * 0.08}>
@@ -76,22 +70,63 @@ export default function Materiel() {
               </Reveal>
             ))}
           </div>
+          <Reveal delay={0.15}>
+            <div className="mt-10 flex flex-col items-center gap-4 text-center">
+              <p className="max-w-2xl text-sm text-ivory/65">
+                {fr
+                  ? "Chaque installation commence par une étude : relevé acoustique du lieu, dimensionnement du matériel, plan d'implantation et devis ferme."
+                  : "Every installation starts with a study: venue acoustic survey, equipment sizing, layout plan and firm quote."}
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <button onClick={askStudy} data-track="study_request_click" data-label="CTA installation" className="btn btn-wa">
+                  <Icon name="chat" className="h-4 w-4" /> {fr ? "Demander une étude" : "Request a study"}
+                </button>
+                <button onClick={() => setOpen(true)} className="btn btn-gold">
+                  <Icon name="ruler" className="h-4 w-4" /> {fr ? "Formulaire de devis" : "Quote form"}
+                </button>
+              </div>
+            </div>
+          </Reveal>
         </div>
 
+        {/* ---- Formation & SAV ---- */}
         <Reveal delay={0.1}>
           <div className="glass mt-16 grid items-center gap-8 rounded-3xl border-gold/40 bg-gradient-to-br from-gold/10 to-copper/10 p-8 lg:grid-cols-[1fr_auto]">
             <div>
-              <h3 className="font-display text-2xl font-bold">{lang === "fr" ? "Formation & service après-vente" : "Training & after-sales service"}</h3>
+              <h3 className="font-display text-2xl font-bold">{fr ? "Formation & service après-vente" : "Training & after-sales service"}</h3>
               <p className="mt-2 max-w-2xl text-sm text-ivory/70">
-                {lang === "fr"
+                {fr
                   ? "Formation de vos techniciens internes (techniciens d'église, régisseurs) et maintenance préventive de votre parc matériel."
                   : "Training for your in-house technicians (church techs, stage managers) and preventive maintenance of your equipment."}
               </p>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <button onClick={() => setOpen(true)} className="btn btn-gold"><Icon name="ruler" className="h-4 w-4" /> {lang === "fr" ? "Obtenir une étude" : "Get a study"}</button>
-              <button onClick={() => send("Bonjour Aklimasound, je souhaite un renseignement sur la vente & installation de matériel (offre : Vente & Installation Fixe).")} className="btn btn-wa"><Icon name="chat" className="h-4 w-4" /> WhatsApp</button>
+            <button onClick={askStudy} className="btn btn-outline"><Icon name="phone" className="h-4 w-4" /> {fr ? "En parler" : "Talk to us"}</button>
+          </div>
+        </Reveal>
+
+        {/* ---- Boutique : teaser d'ouverture ---- */}
+        <Reveal delay={0.1}>
+          <div className="relative mt-20 overflow-hidden rounded-3xl border border-ivory/12 bg-ink-2/70 p-10 text-center">
+            <div className="pointer-events-none absolute inset-0 opacity-[0.05]" style={{ backgroundImage: "radial-gradient(circle at 50% 0%, var(--color-gold), transparent 60%)" }} />
+            <span className="chip mx-auto"><Icon name="package" className="h-3.5 w-3.5" /> {fr ? "Ouverture prochaine" : "Opening soon"}</span>
+            <h3 className="mt-5 font-display text-3xl font-bold">{fr ? "La boutique Aklimasound arrive bientôt" : "The Aklimasound shop is coming soon"}</h3>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-ivory/65">
+              {fr
+                ? "Enceintes, consoles, micros, traitements acoustiques et accessoires pro — sélectionnés et testés par nos ingénieurs, avec garantie et conseils d'installation. Vente en ligne et retrait à Lomé."
+                : "Speakers, consoles, mics, acoustic treatment and pro accessories — selected and tested by our engineers, with warranty and installation advice. Online sales and pickup in Lomé."}
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <button
+                onClick={() => send(fr ? "Bonjour Aklimasound, prévenez-moi dès l'ouverture de la boutique en ligne !" : "Hello Aklimasound, notify me as soon as the online shop opens!")}
+                data-track="shop_notify_click"
+                className="btn btn-wa">
+                <Icon name="chat" className="h-4 w-4" /> {fr ? "Prévenez-moi de l'ouverture" : "Notify me at launch"}
+              </button>
+              <button onClick={() => setOpen(true)} className="btn btn-outline">{fr ? "Commande spéciale déjà" : "Special order now"}</button>
             </div>
+            <p className="mt-4 text-[11px] text-ivory/40">
+              {fr ? "Besoin d'un équipement précis avant l'ouverture ? Nous sourçons pour vous sur demande." : "Need specific gear before launch? We source on request."}
+            </p>
           </div>
         </Reveal>
       </section>

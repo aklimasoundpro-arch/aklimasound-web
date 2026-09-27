@@ -14,7 +14,7 @@ export default function Footer() {
             <Image src="/img/logo-aks-white.png" alt="Aklimasound" width={1254} height={1254} className="h-16 w-16 object-contain" />
             <div>
               <p className="font-display text-xl font-bold tracking-[0.16em]">AKLIMASOUND PRO</p>
-              <p className="text-xs text-gold/80">Sonorisation • Vente & Installation • Beatstore</p>
+              <p className="text-xs text-gold/80">Sonorisation • Installation Fixe • LOGICS • Beatstore</p>
             </div>
           </div>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-ivory/60">{t("footer_about")}</p>
@@ -32,7 +32,8 @@ export default function Footer() {
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gold">{t("footer_services")}</p>
           <ul className="space-y-2 text-sm text-ivory/70">
             <li><Link className="hover:text-gold" href="/services/concert-chorale">Sonorisation événementielle</Link></li>
-            <li><Link className="hover:text-gold" href="/materiel">Vente & installation matériel</Link></li>
+            <li><Link className="hover:text-gold" href="/materiel">Installation fixe & boutique (bientôt)</Link></li>
+            <li><Link className="hover:text-gold" href="/logics">AKLIMASOUND LOGICS — logiciel IA</Link></li>
             <li><span className="opacity-60">Beatstore & licences — bientôt</span></li>
             <li><Link className="hover:text-gold" href="/galerie">Galerie réalisations</Link></li>
             <li><Link className="hover:text-gold" href="/devis">Devis en ligne</Link></li>
@@ -59,8 +60,23 @@ export default function Footer() {
           <p className="mt-1 text-xs text-ivory/50">{DOMAINS.map((d) => d.name[lang]).join(" · ")}</p>
         </div>
       </div>
-      <div className="border-t border-ivory/10 px-6 py-4 text-center text-xs text-ivory/45">
-        © 2026 Aklimasound. Tous droits réservés. — Designed & Developed by <span className="text-gold/80">COGNYAX DIGITAL</span>
+      <div className="border-t border-ivory/10 px-6 py-4">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] text-ivory/45">
+          <Link className="hover:text-gold" href="/legal/mentions-legales">{lang === "fr" ? "Mentions légales" : "Legal notice"}</Link>
+          <span aria-hidden>·</span>
+          <Link className="hover:text-gold" href="/legal/confidentialite">{lang === "fr" ? "Politique de confidentialité" : "Privacy policy"}</Link>
+          <span aria-hidden>·</span>
+          <Link className="hover:text-gold" href="/legal/cgv">{lang === "fr" ? "CGV" : "Terms of sale"}</Link>
+          <span aria-hidden>·</span>
+          <Link className="hover:text-gold" href="/legal/cgu">{lang === "fr" ? "CGU" : "Terms of use"}</Link>
+          <span aria-hidden>·</span>
+          <button onClick={() => window.dispatchEvent(new Event("aks-cookie-manage"))} className="underline-offset-2 hover:text-gold hover:underline">
+            {lang === "fr" ? "Gérer mes cookies" : "Manage cookies"}
+          </button>
+        </div>
+        <p className="mt-3 text-center text-xs text-ivory/45">
+          © 2026 Aklimasound. Tous droits réservés. — Designed & Developed by <span className="text-gold/80">COGNYAX DIGITAL</span>
+        </p>
       </div>
     </footer>
   );

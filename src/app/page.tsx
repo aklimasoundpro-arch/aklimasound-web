@@ -10,7 +10,7 @@ import { SectionHead, TrustStrip } from "@/components/ui";
 import { Icon, IconTile } from "@/components/icons";
 import { useWa } from "@/components/WaGate";
 import { QuoteModal, SignupModal, BookingModal } from "@/components/Modals";
-import { DOMAINS, SOLUTIONS, WHY, TESTIMONIALS, GALLERY, CONTACT, waLink, fcfa } from "@/lib/data";
+import { DOMAINS, SOLUTIONS, WHY, GALLERY, CONTACT, waLink, fcfa } from "@/lib/data";
 import { useI18n, L } from "@/lib/i18n";
 
 export default function Home() {
@@ -251,24 +251,6 @@ export default function Home() {
               </div>
             </Reveal>
           ))}
-        </div>
-      </section>
-
-      {/* ============ TÉMOIGNAGES (emplacements prêts pour les vrais avis) ============ */}
-      <section className="border-y border-ivory/10 bg-ink-2/50 py-20">
-        <div className="mx-auto max-w-5xl px-6">
-          <SectionHead center title={t("sec_testimonials")} />
-          <div className="mt-10 grid gap-5 md:grid-cols-2">
-            {TESTIMONIALS.map((x, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <figure className="glass h-full rounded-3xl p-7">
-                  <div className="text-gold tracking-[0.2em]">★★★★★</div>
-                  <blockquote className="mt-3 text-sm leading-relaxed text-ivory/80">« {L(x.q, lang)} »</blockquote>
-                  <figcaption className="mt-4 text-xs font-semibold uppercase tracking-widest text-gold/80">— {L(x.a, lang)}</figcaption>
-                </figure>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 

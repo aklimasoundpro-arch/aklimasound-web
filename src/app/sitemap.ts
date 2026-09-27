@@ -8,6 +8,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/devis`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/materiel`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/galerie`, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${base}/logics`, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${base}/legal/mentions-legales`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/legal/confidentialite`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/legal/cookies`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/legal/cgv`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/legal/cgu`, changeFrequency: "yearly", priority: 0.3 },
     ...DOMAINS.map((d) => ({ url: `${base}/services/${d.slug}`, changeFrequency: "monthly" as const, priority: 0.85 })),
   ];
 }

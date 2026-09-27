@@ -7,7 +7,41 @@ import { store } from "./store";
 
 const VID_KEY = "aks_vid";
 const UTM_KEY = "aks_utm";
+const CONSENT_KEY = "aks_cookie_consent";
+const CONSENT_TTL = 183 * 864e5; // 6 mois
 const UTM_PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid"];
+
+export type Consent = { analytics: boolean; marketing: boolean; date?: string };
+
+/** Consentement courant. Par défaut : mesure d'audience anonyme 1re partie ON
+ *  (exemptée de consentement, opposable via le bandeau), marketing OFF. */
+export function getConsent(): Consent {
+  try {
+    const raw = store.get(CONSENT_KEY);
+    if (raw) {
+      const c = JSON.parse(raw) as Consent;
+      if (c.date && Date.now() - new Date(c.date).getTime() > CONSENT_TTL) return { analytics: true, marketing: false };
+      return { analytics: c.analytics !== false, marketing: c.marketing === true };
+    }
+  } catch { /* choix illisible : défaut prudent */ }
+  return { analytics: true, marketing: false };
+}
+
+export function hasStoredConsent(): boolean {
+  try {
+    const raw = store.get(CONSENT_KEY);
+    if (!raw) return false;
+    const c = JSON.parse(raw) as Consent;
+    return !!c.date && Date.now() - new Date(c.date).getTime() <= CONSENT_TTL;
+  } catch {
+    return false;
+  }
+}
+
+export function setConsent(c: { analytics: boolean; marketing: boolean }) {
+  store.set(CONSENT_KEY, JSON.stringify({ ...c, date: new Date().toISOString() }));
+  try { window.dispatchEvent(new Event("aks-consent")); } catch { /* sans effet */ }
+}
 
 export function visitorId(): string {
   let v = store.get(VID_KEY);
@@ -42,6 +76,7 @@ export function currentUtm(): Record<string, string> | null {
 export function track(event: string, data: Record<string, unknown> = {}) {
   try {
     if (typeof window === "undefined") return;
+    if (!getConsent().analytics) return; // visiteur opposé à la mesure d'audience
     fetch("/api/public/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

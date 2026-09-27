@@ -46,9 +46,9 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/realisation-scene.jpg",
     offers: [
-      { name: "Pack Chœur Intimiste", price: 120000, cap: 150, includes: { fr: "2 enceintes amplifiées + 4 micros filaires + console 12 voies + 1 technicien.", en: "2 powered speakers + 4 wired mics + 12-channel console + 1 technician." }, limits: { fr: "Max 150 pers. en intérieur. Pas de retours individuels.", en: "Max 150 people indoors. No individual monitors." } },
-      { name: "Pack Harmony Live", price: 250000, cap: 500, star: true, includes: { fr: "Système façade complet + 8 micros chœur + 2 micros HF + retours scène + console numérique 24 voies + 2 techniciens.", en: "Full FOH system + 8 choir mics + 2 HF mics + stage monitors + 24-channel digital console + 2 technicians." }, limits: { fr: "Max 500 pers. Éclairage basique non inclus.", en: "Max 500 people. Basic lighting not included." } },
-      { name: "Pack Majesté Divine", price: 450000, cap: 99999, includes: { fr: "Sono forte puissance + captation multi-pistes + multipaire + pack lumières (PAR LED / lyres) + 3 techniciens.", en: "High-power sound + multitrack recording + stage box + lighting pack (PAR LED / moving heads) + 3 technicians." }, limits: { fr: "Grands auditoriums / églises (+500 pers).", en: "Large auditoriums / churches (500+ people)." } },
+      { name: "Pack Basique", price: 120000, cap: 150, includes: { fr: "2 enceintes amplifiées + 4 micros filaires + console 12 voies + 1 technicien.", en: "2 powered speakers + 4 wired mics + 12-channel console + 1 technician." }, limits: { fr: "Max 150 pers. en intérieur. Pas de retours individuels.", en: "Max 150 people indoors. No individual monitors." } },
+      { name: "Pack Pro", price: 250000, cap: 500, star: true, includes: { fr: "Système façade complet + 8 micros chœur + 2 micros HF + retours scène + console numérique 24 voies + 2 techniciens.", en: "Full FOH system + 8 choir mics + 2 HF mics + stage monitors + 24-channel digital console + 2 technicians." }, limits: { fr: "Max 500 pers. Éclairage basique non inclus.", en: "Max 500 people. Basic lighting not included." } },
+      { name: "Pack Premium", price: 450000, cap: 99999, includes: { fr: "Sono forte puissance + captation multi-pistes + multipaire + pack lumières (PAR LED / lyres) + 3 techniciens.", en: "High-power sound + multitrack recording + stage box + lighting pack (PAR LED / moving heads) + 3 technicians." }, limits: { fr: "Grands auditoriums / églises (+500 pers).", en: "Large auditoriums / churches (500+ people)." } },
     ],
   },
   {
@@ -61,9 +61,9 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/realisation-engineer2.jpg",
     offers: [
-      { name: "Pack Vin d'Honneur", price: 75000, cap: 100, includes: { fr: "2 enceintes + 2 micros sans fil (discours) + mixage musique d'ambiance.", en: "2 speakers + 2 wireless mics (speeches) + background music mixing." }, limits: { fr: "Max 100 invités. Pas de DJ / pas de lumières.", en: "Max 100 guests. No DJ / no lighting." } },
-      { name: "Pack Noces d'Or", price: 150000, cap: 300, star: true, includes: { fr: "Système son complet (façade + caisson de basse) + 2 micros HF + 1 régisseur/DJ + éclairage piste de danse.", en: "Complete sound system (FOH + subwoofer) + 2 HF mics + 1 director/DJ + dance-floor lighting." }, limits: { fr: "Max 300 invités. Heures sup. au-delà de 2h du matin en option.", en: "Max 300 guests. Overtime past 2 am optional." } },
-      { name: "Pack Prestige Royal", price: 300000, cap: 99999, includes: { fr: "Sono HD + pack lumières architecturales LED + effets spéciaux (fumée lourde / étincelles) + régie dédiée.", en: "HD sound + architectural LED lighting pack + special effects (heavy fog / sparks) + dedicated booth." }, limits: { fr: "Nécessite un accès électrique stable sur le site.", en: "Requires stable power supply on site." } },
+      { name: "Pack Basique", price: 75000, cap: 100, includes: { fr: "2 enceintes + 2 micros sans fil (discours) + mixage musique d'ambiance.", en: "2 speakers + 2 wireless mics (speeches) + background music mixing." }, limits: { fr: "Max 100 invités. Pas de DJ / pas de lumières.", en: "Max 100 guests. No DJ / no lighting." } },
+      { name: "Pack Pro", price: 150000, cap: 300, star: true, includes: { fr: "Système son complet (façade + caisson de basse) + 2 micros HF + 1 régisseur/DJ + éclairage piste de danse.", en: "Complete sound system (FOH + subwoofer) + 2 HF mics + 1 director/DJ + dance-floor lighting." }, limits: { fr: "Max 300 invités. Heures sup. au-delà de 2h du matin en option.", en: "Max 300 guests. Overtime past 2 am optional." } },
+      { name: "Pack Premium", price: 300000, cap: 99999, includes: { fr: "Sono HD + pack lumières architecturales LED + effets spéciaux (fumée lourde / étincelles) + régie dédiée.", en: "HD sound + architectural LED lighting pack + special effects (heavy fog / sparks) + dedicated booth." }, limits: { fr: "Nécessite un accès électrique stable sur le site.", en: "Requires stable power supply on site." } },
     ],
   },
   {
@@ -76,9 +76,9 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/realisation-regie.jpg",
     offers: [
-      { name: "Pack Executive", price: 80000, cap: 80, includes: { fr: "2 enceintes sur pied + 2 micros pupitre/HF + câblage propre et discret + 1 technicien ponctuel.", en: "2 speakers on stands + 2 podium/HF mics + clean discreet cabling + 1 punctual technician." }, limits: { fr: "Max 80 pers. en salle de réunion.", en: "Max 80 people in a meeting room." } },
-      { name: "Pack Séminaire & Gala", price: 180000, cap: 300, star: true, includes: { fr: "Sonorisation à répartition homogène + 4 micros HF + console audio + assistance technique continue + facture pro.", en: "Even-coverage sound + 4 HF mics + audio console + continuous technical support + pro invoice." }, limits: { fr: "Max 300 pers. Vidéoprojecteur en option.", en: "Max 300 people. Video projector optional." } },
-      { name: "Pack Convention Corporate", price: 350000, cap: 99999, includes: { fr: "Système Line Array compact + micros casques/cravates + enregistrement audio des interventions + éclairage scène.", en: "Compact Line Array system + headset/lavalier mics + speech recording + stage lighting." }, limits: { fr: "Fiche technique demandée au préalable.", en: "Technical rider required beforehand." } },
+      { name: "Pack Basique", price: 80000, cap: 80, includes: { fr: "2 enceintes sur pied + 2 micros pupitre/HF + câblage propre et discret + 1 technicien ponctuel.", en: "2 speakers on stands + 2 podium/HF mics + clean discreet cabling + 1 punctual technician." }, limits: { fr: "Max 80 pers. en salle de réunion.", en: "Max 80 people in a meeting room." } },
+      { name: "Pack Pro", price: 180000, cap: 300, star: true, includes: { fr: "Sonorisation à répartition homogène + 4 micros HF + console audio + assistance technique continue + facture pro.", en: "Even-coverage sound + 4 HF mics + audio console + continuous technical support + pro invoice." }, limits: { fr: "Max 300 pers. Vidéoprojecteur en option.", en: "Max 300 people. Video projector optional." } },
+      { name: "Pack Premium", price: 350000, cap: 99999, includes: { fr: "Système Line Array compact + micros casques/cravates + enregistrement audio des interventions + éclairage scène.", en: "Compact Line Array system + headset/lavalier mics + speech recording + stage lighting." }, limits: { fr: "Fiche technique demandée au préalable.", en: "Technical rider required beforehand." } },
     ],
   },
   {
@@ -91,9 +91,9 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/realisation-console.jpg",
     offers: [
-      { name: "Pack Mini Party", price: 50000, cap: 70, includes: { fr: "2 enceintes amplifiées + 1 micro filaire + câble Aux/Bluetooth + 1 technicien d'installation.", en: "2 powered speakers + 1 wired mic + Aux/Bluetooth cable + 1 setup technician." }, limits: { fr: "Formule compacte, max 70 pers.", en: "Compact formula, max 70 people." } },
-      { name: "Pack Célébration", price: 100000, cap: 200, star: true, includes: { fr: "2 enceintes + 1 subwoofer + 2 micros sans fil + jeu de lumière basique + 1 technicien/opérateur.", en: "2 speakers + 1 subwoofer + 2 wireless mics + basic light set + 1 technician/operator." }, limits: { fr: "Max 200 pers.", en: "Max 200 people." } },
-      { name: "Pack VIP Lounge", price: 200000, cap: 99999, includes: { fr: "Setup son complet forte basse + éclairage dynamique + DJ/animateur partenaire + machine à fumée.", en: "Full bass-heavy sound setup + dynamic lighting + partner DJ/host + fog machine." }, limits: { fr: "Durée max de prestation : 8 heures.", en: "Max service duration: 8 hours." } },
+      { name: "Pack Basique", price: 50000, cap: 70, includes: { fr: "2 enceintes amplifiées + 1 micro filaire + câble Aux/Bluetooth + 1 technicien d'installation.", en: "2 powered speakers + 1 wired mic + Aux/Bluetooth cable + 1 setup technician." }, limits: { fr: "Formule compacte, max 70 pers.", en: "Compact formula, max 70 people." } },
+      { name: "Pack Pro", price: 100000, cap: 200, star: true, includes: { fr: "2 enceintes + 1 subwoofer + 2 micros sans fil + jeu de lumière basique + 1 technicien/opérateur.", en: "2 speakers + 1 subwoofer + 2 wireless mics + basic light set + 1 technician/operator." }, limits: { fr: "Max 200 pers.", en: "Max 200 people." } },
+      { name: "Pack Premium", price: 200000, cap: 99999, includes: { fr: "Setup son complet forte basse + éclairage dynamique + DJ/animateur partenaire + machine à fumée.", en: "Full bass-heavy sound setup + dynamic lighting + partner DJ/host + fog machine." }, limits: { fr: "Durée max de prestation : 8 heures.", en: "Max service duration: 8 hours." } },
     ],
   },
   {
@@ -106,9 +106,9 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/hero-eglise.jpg",
     offers: [
-      { name: "Pack Rassemblement", price: 100000, cap: 200, includes: { fr: "2 enceintes longue portée + 2 micros sans fil + 1 technicien.", en: "2 long-throw speakers + 2 wireless mics + 1 technician." }, limits: { fr: "Max 200 pers. en extérieur.", en: "Max 200 people outdoors." } },
-      { name: "Pack Croisade & Louange", price: 220000, cap: 600, star: true, includes: { fr: "4 enceintes + 2 caissons de basse + console 16 voies + micros chant/prédicateur + 2 techniciens.", en: "4 speakers + 2 subwoofers + 16-channel console + worship/preacher mics + 2 technicians." }, limits: { fr: "Max 600 pers.", en: "Max 600 people." } },
-      { name: "Pack Grand Réveil", price: 400000, cap: 99999, includes: { fr: "Matériel de forte projection acoustique (anti-larsen) + régie complète + groupe électrogène de secours.", en: "High-projection acoustic gear (anti-feedback) + full booth + backup generator." }, limits: { fr: "Repérage terrain 24 h avant requis.", en: "Site survey required 24 h ahead." } },
+      { name: "Pack Basique", price: 100000, cap: 200, includes: { fr: "2 enceintes longue portée + 2 micros sans fil + 1 technicien.", en: "2 long-throw speakers + 2 wireless mics + 1 technician." }, limits: { fr: "Max 200 pers. en extérieur.", en: "Max 200 people outdoors." } },
+      { name: "Pack Pro", price: 220000, cap: 600, star: true, includes: { fr: "4 enceintes + 2 caissons de basse + console 16 voies + micros chant/prédicateur + 2 techniciens.", en: "4 speakers + 2 subwoofers + 16-channel console + worship/preacher mics + 2 technicians." }, limits: { fr: "Max 600 pers.", en: "Max 600 people." } },
+      { name: "Pack Premium", price: 400000, cap: 99999, includes: { fr: "Matériel de forte projection acoustique (anti-larsen) + régie complète + groupe électrogène de secours.", en: "High-projection acoustic gear (anti-feedback) + full booth + backup generator." }, limits: { fr: "Repérage terrain 24 h avant requis.", en: "Site survey required 24 h ahead." } },
     ],
   },
   {
@@ -121,9 +121,9 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/realisation-ingenieur.jpg",
     offers: [
-      { name: "Pack Weekend Pop", price: 60000, cap: 120, includes: { fr: "2 enceintes compactes + 1 micro sans fil pour animations / jeux concours.", en: "2 compact speakers + 1 wireless mic for animations / contests." }, limits: { fr: "Prestation de 18 h à 00 h max.", en: "Service from 6 pm to midnight max." } },
-      { name: "Pack Soirée Thématique", price: 120000, cap: 300, star: true, includes: { fr: "Sonorisation percutante (terrasse / plein air) + jeux de lumières + technicien présent toute la nuit.", en: "Punchy sound (terrace / open air) + light sets + technician present all night." }, limits: { fr: "Uniquement pour événements ponctuels.", en: "One-off events only." } },
-      { name: "Pack Residency (mensuel)", price: 300000, cap: 99999, includes: { fr: "Mise à disposition de matériel 2 à 3 weekends par mois avec suivi technique.", en: "Equipment provided 2 to 3 weekends per month with technical follow-up." }, limits: { fr: "Contrat d'engagement de 3 mois min.", en: "Minimum 3-month commitment." } },
+      { name: "Pack Basique", price: 60000, cap: 120, includes: { fr: "2 enceintes compactes + 1 micro sans fil pour animations / jeux concours.", en: "2 compact speakers + 1 wireless mic for animations / contests." }, limits: { fr: "Prestation de 18 h à 00 h max.", en: "Service from 6 pm to midnight max." } },
+      { name: "Pack Pro", price: 120000, cap: 300, star: true, includes: { fr: "Sonorisation percutante (terrasse / plein air) + jeux de lumières + technicien présent toute la nuit.", en: "Punchy sound (terrace / open air) + light sets + technician present all night." }, limits: { fr: "Uniquement pour événements ponctuels.", en: "One-off events only." } },
+      { name: "Pack Premium", price: 300000, cap: 99999, includes: { fr: "Mise à disposition de matériel 2 à 3 weekends par mois avec suivi technique.", en: "Equipment provided 2 to 3 weekends per month with technical follow-up." }, limits: { fr: "Contrat d'engagement de 3 mois min.", en: "Minimum 3-month commitment." } },
     ],
   },
   {
@@ -136,9 +136,9 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/realisation-regie.jpg",
     offers: [
-      { name: "Pack Scène Émergente", price: 300000, cap: 800, includes: { fr: "Façade 4000 W + retours bain de pieds + kit micros batterie/instruments + 2 techniciens.", en: "4000 W FOH + wedge monitors + drum/instrument mic kit + 2 technicians." }, limits: { fr: "Max 800 pers.", en: "Max 800 people." } },
-      { name: "Pack Outdoor Festival", price: 650000, cap: 2500, star: true, includes: { fr: "Système Line Array suspendu/stacked + régie retour séparée + éclairage de scène complet + 4 techniciens.", en: "Suspended/stacked Line Array system + separate monitor booth + full stage lighting + 4 technicians." }, limits: { fr: "Jauge 1000 à 2500 pers.", en: "Capacity 1,000 to 2,500 people." } },
-      { name: "Pack Main Stage Pro", price: null, priceLabel: { fr: "Sur devis (+1 M FCFA)", en: "On quote (1M+ FCFA)" }, cap: 99999, includes: { fr: "Configuration sur-mesure lourde + structure de scène + distribution électrique haute capacité + équipe dédiée.", en: "Heavy bespoke configuration + stage structure + high-capacity power distribution + dedicated crew." }, limits: { fr: "Fiche technique d'artiste requise.", en: "Artist technical rider required." } },
+      { name: "Pack Basique", price: 300000, cap: 800, includes: { fr: "Façade 4000 W + retours bain de pieds + kit micros batterie/instruments + 2 techniciens.", en: "4000 W FOH + wedge monitors + drum/instrument mic kit + 2 technicians." }, limits: { fr: "Max 800 pers.", en: "Max 800 people." } },
+      { name: "Pack Pro", price: 650000, cap: 2500, star: true, includes: { fr: "Système Line Array suspendu/stacked + régie retour séparée + éclairage de scène complet + 4 techniciens.", en: "Suspended/stacked Line Array system + separate monitor booth + full stage lighting + 4 technicians." }, limits: { fr: "Jauge 1000 à 2500 pers.", en: "Capacity 1,000 to 2,500 people." } },
+      { name: "Pack Premium", price: null, priceLabel: { fr: "Sur devis (+1 M FCFA)", en: "On quote (1M+ FCFA)" }, cap: 99999, includes: { fr: "Configuration sur-mesure lourde + structure de scène + distribution électrique haute capacité + équipe dédiée.", en: "Heavy bespoke configuration + stage structure + high-capacity power distribution + dedicated crew." }, limits: { fr: "Fiche technique d'artiste requise.", en: "Artist technical rider required." } },
     ],
   },
   {
@@ -152,9 +152,9 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/hero-eglise.jpg",
     offers: [
-      { name: "Pack Hommage", price: 100000, cap: 150, includes: { fr: "2 enceintes colonne + 2 micros pupitre + diffusion musicale sobre + 1 technicien discret.", en: "2 column speakers + 2 podium mics + sober music playback + 1 discreet technician." }, limits: { fr: "Max 150 pers. Intérieur ou cour.", en: "Max 150 people. Indoor or courtyard." } },
-      { name: "Pack Cérémonie", price: 180000, cap: 400, star: true, includes: { fr: "Système complet + 4 micros (famille/officiants) + pupitre sonorisé + captation hommage + 2 techniciens.", en: "Full system + 4 mics (family/officiants) + amplified podium + memorial recording + 2 technicians." }, limits: { fr: "Max 400 pers. Éclairage non inclus.", en: "Max 400 people. Lighting not included." } },
-      { name: "Pack Grandes Obsèques", price: 350000, cap: 99999, includes: { fr: "Façade longue portée + multi-zones (cour + salle) + groupe électrogène + régie complète + 3 techniciens.", en: "Long-throw FOH + multi-zone (courtyard + hall) + generator + full booth + 3 technicians." }, limits: { fr: "Repérage 24 h avant requis.", en: "Site survey 24 h ahead required." } },
+      { name: "Pack Basique", price: 100000, cap: 150, includes: { fr: "2 enceintes colonne + 2 micros pupitre + diffusion musicale sobre + 1 technicien discret.", en: "2 column speakers + 2 podium mics + sober music playback + 1 discreet technician." }, limits: { fr: "Max 150 pers. Intérieur ou cour.", en: "Max 150 people. Indoor or courtyard." } },
+      { name: "Pack Pro", price: 180000, cap: 400, star: true, includes: { fr: "Système complet + 4 micros (famille/officiants) + pupitre sonorisé + captation hommage + 2 techniciens.", en: "Full system + 4 mics (family/officiants) + amplified podium + memorial recording + 2 technicians." }, limits: { fr: "Max 400 pers. Éclairage non inclus.", en: "Max 400 people. Lighting not included." } },
+      { name: "Pack Premium", price: 350000, cap: 99999, includes: { fr: "Façade longue portée + multi-zones (cour + salle) + groupe électrogène + régie complète + 3 techniciens.", en: "Long-throw FOH + multi-zone (courtyard + hall) + generator + full booth + 3 technicians." }, limits: { fr: "Repérage 24 h avant requis.", en: "Site survey 24 h ahead required." } },
     ],
   },
   {
@@ -168,9 +168,9 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/realisation-ingenieur.jpg",
     offers: [
-      { name: "Pack Promo", price: 80000, cap: 120, includes: { fr: "2 enceintes + 2 micros sans fil + musique d'ambiance + 1 technicien.", en: "2 speakers + 2 wireless mics + background music + 1 technician." }, limits: { fr: "Max 120 pers. Salle ou préau.", en: "Max 120 people. Hall or covered yard." } },
-      { name: "Pack Graduation", price: 150000, cap: 350, star: true, includes: { fr: "Système façade + caisson + 4 micros HF (remise des diplômes) + pupitre + éclairage basique + 2 techniciens.", en: "FOH system + sub + 4 HF mics (diploma handing) + podium + basic lighting + 2 technicians." }, limits: { fr: "Max 350 pers.", en: "Max 350 people." } },
-      { name: "Pack Campus", price: 280000, cap: 99999, includes: { fr: "Sono plein air + scène mobile légère + DJ partenaire + jeux de lumières + 3 techniciens.", en: "Open-air sound + light mobile stage + partner DJ + light sets + 3 technicians." }, limits: { fr: "Autorisation établissement requise.", en: "School authorisation required." } },
+      { name: "Pack Basique", price: 80000, cap: 120, includes: { fr: "2 enceintes + 2 micros sans fil + musique d'ambiance + 1 technicien.", en: "2 speakers + 2 wireless mics + background music + 1 technician." }, limits: { fr: "Max 120 pers. Salle ou préau.", en: "Max 120 people. Hall or covered yard." } },
+      { name: "Pack Pro", price: 150000, cap: 350, star: true, includes: { fr: "Système façade + caisson + 4 micros HF (remise des diplômes) + pupitre + éclairage basique + 2 techniciens.", en: "FOH system + sub + 4 HF mics (diploma handing) + podium + basic lighting + 2 technicians." }, limits: { fr: "Max 350 pers.", en: "Max 350 people." } },
+      { name: "Pack Premium", price: 280000, cap: 99999, includes: { fr: "Sono plein air + scène mobile légère + DJ partenaire + jeux de lumières + 3 techniciens.", en: "Open-air sound + light mobile stage + partner DJ + light sets + 3 technicians." }, limits: { fr: "Autorisation établissement requise.", en: "School authorisation required." } },
     ],
   },
   {
@@ -184,18 +184,18 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/realisation-scene.jpg",
     offers: [
-      { name: "Pack Podium", price: 120000, cap: 150, includes: { fr: "2 enceintes + 1 subwoofer + 2 micros animateur + diffusion playlist synchronisée + 1 technicien.", en: "2 speakers + 1 subwoofer + 2 host mics + synced playlist playback + 1 technician." }, limits: { fr: "Max 150 pers. Salle.", en: "Max 150 people. Indoor." } },
-      { name: "Pack Runway", price: 250000, cap: 400, star: true, includes: { fr: "Façade + retours podium + 4 micros HF + console numérique + éclairage runway + 2 techniciens.", en: "FOH + podium monitors + 4 HF mics + digital console + runway lighting + 2 technicians." }, limits: { fr: "Max 400 pers.", en: "Max 400 people." } },
-      { name: "Pack Gala Beauté", price: 450000, cap: 99999, includes: { fr: "Line Array compact + régie complète + effets spéciaux + pack lumières scénique + 3 techniciens + répétitions incluses.", en: "Compact Line Array + full booth + special effects + stage lighting pack + 3 technicians + rehearsals included." }, limits: { fr: "Fiche technique du show requise.", en: "Show technical rider required." } },
+      { name: "Pack Basique", price: 120000, cap: 150, includes: { fr: "2 enceintes + 1 subwoofer + 2 micros animateur + diffusion playlist synchronisée + 1 technicien.", en: "2 speakers + 1 subwoofer + 2 host mics + synced playlist playback + 1 technician." }, limits: { fr: "Max 150 pers. Salle.", en: "Max 150 people. Indoor." } },
+      { name: "Pack Pro", price: 250000, cap: 400, star: true, includes: { fr: "Façade + retours podium + 4 micros HF + console numérique + éclairage runway + 2 techniciens.", en: "FOH + podium monitors + 4 HF mics + digital console + runway lighting + 2 technicians." }, limits: { fr: "Max 400 pers.", en: "Max 400 people." } },
+      { name: "Pack Premium", price: 450000, cap: 99999, includes: { fr: "Line Array compact + régie complète + effets spéciaux + pack lumières scénique + 3 techniciens + répétitions incluses.", en: "Compact Line Array + full booth + special effects + stage lighting pack + 3 technicians + rehearsals included." }, limits: { fr: "Fiche technique du show requise.", en: "Show technical rider required." } },
     ],
   },
 ];
 
 export const SOLUTIONS = [
-  { icon: "mic", name: { fr: "Concerts & Chorales", en: "Concerts & Choirs" }, desc: { fr: "Clarté acoustique absolue pour sublimer les voix et les instruments live. Gestion multi-micros et retours précis.", en: "Absolute acoustic clarity for live voices and instruments. Multi-mic management and precise monitors." }, pack: "Pack Harmony Live — 250 000 FCFA", href: "/services/concert-chorale" },
-  { icon: "gem", name: { fr: "Mariages & Réceptions", en: "Weddings & Receptions" }, desc: { fr: "Souvenirs inoubliables avec un son cristallin, régie DJ dynamique et mise en lumière féerique de la piste.", en: "Unforgettable memories with crystal sound, dynamic DJ booth and magical dance-floor lighting." }, pack: "Pack Noces d'Or — 150 000 FCFA", href: "/services/mariage" },
-  { icon: "briefcase", name: { fr: "Entreprises (B2B)", en: "Companies (B2B)" }, desc: { fr: "Séminaires et galas d'entreprise sans larsen ni coupure. Diffusion homogène, micros HF et facturation pro.", en: "Corporate seminars and galas without feedback or dropouts. Even coverage, HF mics and pro invoicing." }, pack: "Pack Séminaire — 180 000 FCFA", href: "/services/entreprise" },
-  { icon: "wrench", name: { fr: "Vente & Installation Fixe", en: "Sales & Fixed Installation" }, desc: { fr: "Équipement complet et intégration acoustique sur-mesure pour églises, auditoriums, conférences et bars/maquis.", en: "Complete equipment and bespoke acoustic integration for churches, auditoriums, conference rooms and bars." }, pack: { fr: "Obtenir une étude d'installation", en: "Get an installation study" }, href: "/materiel" },
+  { icon: "mic", name: { fr: "Concerts & Chorales", en: "Concerts & Choirs" }, desc: { fr: "Clarté acoustique absolue pour sublimer les voix et les instruments live. Gestion multi-micros et retours précis.", en: "Absolute acoustic clarity for live voices and instruments. Multi-mic management and precise monitors." }, pack: "Pack Pro — 250 000 FCFA", href: "/services/concert-chorale" },
+  { icon: "gem", name: { fr: "Mariages & Réceptions", en: "Weddings & Receptions" }, desc: { fr: "Souvenirs inoubliables avec un son cristallin, régie DJ dynamique et mise en lumière féerique de la piste.", en: "Unforgettable memories with crystal sound, dynamic DJ booth and magical dance-floor lighting." }, pack: "Pack Pro — 150 000 FCFA", href: "/services/mariage" },
+  { icon: "briefcase", name: { fr: "Entreprises (B2B)", en: "Companies (B2B)" }, desc: { fr: "Séminaires et galas d'entreprise sans larsen ni coupure. Diffusion homogène, micros HF et facturation pro.", en: "Corporate seminars and galas without feedback or dropouts. Even coverage, HF mics and pro invoicing." }, pack: "Pack Pro — 180 000 FCFA", href: "/services/entreprise" },
+  { icon: "wrench", name: { fr: "Installation Fixe & Boutique", en: "Fixed Installation & Shop" }, desc: { fr: "Intégration acoustique sur-mesure pour églises, auditoriums, conférences et bars/maquis. Boutique de matériel : ouverture bientôt.", en: "Bespoke acoustic integration for churches, auditoriums, conference rooms and bars. Equipment shop: opening soon." }, pack: { fr: "Demander une étude", en: "Request a study" }, href: "/materiel" },
   { icon: "party", name: { fr: "Fêtes & Plein Air", en: "Parties & Open Air" }, desc: { fr: "Anniversaires, manifestations culturelles, maquis, réceptions privées et grands rassemblements plein air.", en: "Birthdays, cultural events, maquis, private receptions and large open-air gatherings." }, pack: { fr: "Découvrir toutes les offres", en: "Discover all packages" }, href: "/services/festival" },
 ];
 

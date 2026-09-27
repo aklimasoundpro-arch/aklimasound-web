@@ -40,14 +40,14 @@ function seed(): DB {
       { id: uid(), createdAt: days(-2), name: "Sœur Mensah", phone: "+228 91 23 45 67", email: "", source: "WhatsApp (porte)" },
     ],
     quotes: [
-      { id: uid(), createdAt: days(-0.02), name: "M. Mensah", phone: "+228 92 34 56 78", email: "mensah@mail.tg", domain: "Mariages", offer: "Pack Noces d'Or", date: days(27).slice(0, 10), place: "Lomé — Bè-Kpota", total: 450000, source: "formulaire", status: "nouveau", msg: "300 invités, plein air." },
+      { id: uid(), createdAt: days(-0.02), name: "M. Mensah", phone: "+228 92 34 56 78", email: "mensah@mail.tg", domain: "Mariages", offer: "Pack Pro", date: days(27).slice(0, 10), place: "Lomé — Bè-Kpota", total: 450000, source: "formulaire", status: "nouveau", msg: "300 invités, plein air." },
       { id: uid(), createdAt: days(-1), name: "ORABANK RH", phone: "+228 93 45 67 89", email: "rh@orabank.example", domain: "Entreprises", offer: "Pack Conférence", date: days(13).slice(0, 10), place: "Lomé — hôtel Sarakawa", total: 0, source: "simulateur", status: "nouveau", msg: "Séminaire 2 jours, captation souhaitée." },
     ],
     bookings: [
-      { id: uid(), createdAt: days(-3), customer: "Chorale Écho de Vie", phone: "+228 94 56 78 90", domain: "Religieux", offer: "Pack Croisade & Louange", date: days(20).slice(0, 10), place: "Kara", total: 440000, depositRate: 50, proofRef: "FLOOZ-98213", status: "deposit_proof", channel: "WhatsApp" },
-      { id: uid(), createdAt: days(-6), customer: "Convention ADRA", phone: "+228 95 67 89 01", domain: "Religieux", offer: "Pack Convention", date: days(34).slice(0, 10), place: "Atakpamé", total: 850000, depositRate: 30, proofRef: "MIXX-55120", status: "confirmed", channel: "WhatsApp" },
+      { id: uid(), createdAt: days(-3), customer: "Chorale Écho de Vie", phone: "+228 94 56 78 90", domain: "Religieux", offer: "Pack Pro", date: days(20).slice(0, 10), place: "Kara", total: 440000, depositRate: 50, proofRef: "FLOOZ-98213", status: "deposit_proof", channel: "WhatsApp" },
+      { id: uid(), createdAt: days(-6), customer: "Convention ADRA", phone: "+228 95 67 89 01", domain: "Religieux", offer: "Pack Premium", date: days(34).slice(0, 10), place: "Atakpamé", total: 850000, depositRate: 30, proofRef: "MIXX-55120", status: "confirmed", channel: "WhatsApp" },
       { id: uid(), createdAt: days(-10), customer: "Bar Le Wok", phone: "+228 96 78 90 12", domain: "HORECA", offer: "Installation fixe — salle 120", date: days(-2).slice(0, 10), place: "Lomé — Dékon", total: 1250000, depositRate: 50, proofRef: "MIXX-54988", status: "done", channel: "site" },
-      { id: uid(), createdAt: days(-4), customer: "Culte « Le Roi de Gloire »", phone: "+228 97 89 01 23", domain: "Religieux", offer: "Pack Dimanche Live", date: new Date().toISOString().slice(0, 10), place: "Lomé — Adidogomé", total: 260000, depositRate: 30, proofRef: "MIXX-55401", status: "ongoing", channel: "WhatsApp" },
+      { id: uid(), createdAt: days(-4), customer: "Culte « Le Roi de Gloire »", phone: "+228 97 89 01 23", domain: "Religieux", offer: "Pack Basique", date: new Date().toISOString().slice(0, 10), place: "Lomé — Adidogomé", total: 260000, depositRate: 30, proofRef: "MIXX-55401", status: "ongoing", channel: "WhatsApp" },
     ],
     products: [
       { id: uid(), createdAt: days(-30), name: "Enceinte line array L1200", cat: "Façade", price: 950000, stock: 4, status: "disponible" },
@@ -60,7 +60,7 @@ function seed(): DB {
       { id: uid(), createdAt: days(-12), name: "Câblage XLR pro (lot 6 × 15 m)", cat: "Accessoires", price: 135000, stock: 6, status: "disponible" },
     ],
     notifications: [
-      { id: uid(), createdAt: days(-0.01), icon: "file", title: "Nouvelle demande de devis — Pack Noces d'Or (Mariages)", hot: true, read: false },
+      { id: uid(), createdAt: days(-0.01), icon: "file", title: "Nouvelle demande de devis — Pack Pro (Mariages)", hot: true, read: false },
       { id: uid(), createdAt: days(-0.03), icon: "check", title: "Preuve d'acompte à valider — Chorale Écho (220 000 F × 50 %)", hot: true, read: false },
       { id: uid(), createdAt: days(-0.1), icon: "clock", title: "Rappel J-1 : culte « Le Roi de Gloire » — matériel à sortir", hot: true, read: false },
       { id: uid(), createdAt: days(-0.2), icon: "badge", title: "Nouveau membre inscrit (réduction activée) : K. Agbeko", hot: false, read: false },

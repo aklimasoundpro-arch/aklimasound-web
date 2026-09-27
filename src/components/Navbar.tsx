@@ -26,6 +26,7 @@ export default function Navbar({ onQuote }: { onQuote: () => void }) {
 
   const links = [
     { href: "/materiel", label: t("nav_materiel") },
+    { href: "/logics", label: t("nav_logics") },
     { href: "/galerie", label: t("nav_galerie") },
     { href: "/devis", label: t("nav_devis") },
   ];

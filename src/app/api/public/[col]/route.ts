@@ -22,7 +22,9 @@ export async function POST(req: Request, ctx: { params: Promise<{ col: string }>
   if (col === "leads") {
     const name = str(b.name, 80), phone = str(b.phone, 20), email = str(b.email, 120);
     if (name.length < 5 || !/^[+0-9 ().-]{8,20}$/.test(phone)) return NextResponse.json({ ok: false }, { status: 400 });
-    addRow("leads", { name, phone, email, source: str(b.source, 40) || "WhatsApp (porte)" });
+    const source = str(b.source, 40) || "WhatsApp (porte)";
+    addRow("leads", { name, phone, email, source });
+    notify(`Nouveau lead — ${name} (${source})`, "badge", source.startsWith("LOGICS"));
     return NextResponse.json({ ok: true });
   }
 

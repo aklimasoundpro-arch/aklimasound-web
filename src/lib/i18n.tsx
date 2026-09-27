@@ -8,6 +8,7 @@ type Dict = Record<string, { fr: string; en: string }>;
 const D: Dict = {
   nav_services: { fr: "Services", en: "Services" },
   nav_materiel: { fr: "Matériel", en: "Equipment" },
+  nav_logics: { fr: "LOGICS", en: "LOGICS" },
   nav_galerie: { fr: "Galerie", en: "Gallery" },
   nav_devis: { fr: "Devis", en: "Quote" },
   nav_beatstore: { fr: "Beatstore", en: "Beatstore" },
@@ -18,7 +19,7 @@ const D: Dict = {
   cta_quote: { fr: "Demander un devis", en: "Request a quote" },
   cwa: { fr: "Discuter sur WhatsApp", en: "Chat on WhatsApp" },
   cbook: { fr: "Réserver maintenant", en: "Book now" },
-  hero_kicker: { fr: "Sonorisation • Vente & Installation • Beatstore — partout au Togo", en: "Sound systems • Sales & Installation • Beatstore — all across Togo" },
+  hero_kicker: { fr: "Sonorisation • Installation Fixe • LOGICS • Beatstore — partout au Togo", en: "Sound systems • Fixed Installation • LOGICS • Beatstore — all across Togo" },
   hero_title: { fr: "AKLIMASOUND", en: "AKLIMASOUND" },
   hero_sub: {
     fr: "Le son qui sublime vos événements, vos intégrations & vos créations musicales, partout au Togo.",

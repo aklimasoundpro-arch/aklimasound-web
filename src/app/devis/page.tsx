@@ -13,7 +13,7 @@ import { store } from "@/lib/store";
 import { api } from "@/lib/admin-api";
 
 const OPTIONS = [
-  { id: "lumiere", price: 40000, label: { fr: "Pack lumières (PAR LED / lyres)", en: "Lighting pack (PAR LED / moving heads)" } },
+  { id: "lumiere", price: 40000, label: { fr: "Option lumières (PAR LED / lyres)", en: "Lighting pack (PAR LED / moving heads)" } },
   { id: "dj", price: 60000, label: { fr: "DJ / animateur partenaire", en: "Partner DJ / host" } },
   { id: "captation", price: 80000, label: { fr: "Captation audio multi-pistes", en: "Multitrack audio recording" } },
   { id: "groupe", price: 70000, label: { fr: "Groupe électrogène de secours", en: "Backup generator" } },

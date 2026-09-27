@@ -4,6 +4,7 @@ import { LangProvider } from "@/lib/i18n";
 import { WaProvider } from "@/components/WaGate";
 import { SiteTracker } from "@/components/SiteTracker";
 import { MetaPixel } from "@/components/MetaPixel";
+import { CookieBanner } from "@/components/CookieBanner";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://aklimasound.tg"),
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <SiteTracker />
             <MetaPixel />
             {children}
+            <CookieBanner />
           </WaProvider>
         </LangProvider>
       </body>
