@@ -17,7 +17,8 @@ const FEATURES = [
   { icon: "phone", t: { fr: "Contrôle à distance", en: "Remote control" }, d: { fr: "Réglez le son depuis tablette, téléphone ou PC — sur site ou à distance.", en: "Adjust sound from tablet, phone or PC — on site or remotely." } },
   { icon: "package", t: { fr: "Scènes dans le cloud", en: "Cloud scenes" }, d: { fr: "Sauvegardez et rappelez scènes et profils par lieu, événement ou équipe.", en: "Save and recall scenes and profiles per venue, event or team." } },
   { icon: "camera", t: { fr: "Supervision live", en: "Live supervision" }, d: { fr: "Vumètres, alertes et journal détaillé de chaque session en direct.", en: "Meters, alerts and detailed log of every session, live." } },
-  { icon: "badge", t: { fr: "SaaS sans installation", en: "SaaS, no install" }, d: { fr: "Abonnement par poste, mises à jour continues incluses, aucun serveur à gérer.", en: "Per-seat subscription, continuous updates included, no server to manage." } },
+  { icon: "graduation", t: { fr: "Mode Apprentissage IA", en: "AI Learning Mode" }, d: { fr: "Votre IA vous aide à maîtriser votre console : tutoriels interactifs adaptés à votre modèle exact, guidage pas à pas en langage simple. Achetez une console complexe l'esprit tranquille.", en: "Your AI helps you master your console: interactive tutorials matched to your exact model, step-by-step guidance in plain language. Buy a complex console with peace of mind." } },
+  { icon: "badge", t: { fr: "SaaS & mises à jour", en: "SaaS & updates" }, d: { fr: "Abonnement par poste, mises à jour continues incluses, aucun serveur à gérer.", en: "Per-seat subscription, continuous updates included, no server to manage." } },
 ];
 
 const BRANDS = ["Yamaha", "Behringer", "Allen & Heath", "Midas", "Soundcraft", "PreSonus", "Mackie", "Roland"];
@@ -79,13 +80,13 @@ export default function LogicsView() {
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-ivory/65">
               {fr
-                ? "AKLIMASOUND LOGICS est un logiciel SaaS qui unifie le contrôle de plusieurs consoles numériques de marques différentes (Yamaha, Behringer, Allen & Heath, Midas, Soundcraft…) depuis une seule interface, avec assistance IA en temps réel et commandes vocales mains libres : auto-mix, anti-larsen, scènes cloud et supervision à distance. Conçu sur le terrain, par des ingénieurs du son."
-                : "AKLIMASOUND LOGICS is a SaaS software that unifies the control of multiple digital consoles from different brands (Yamaha, Behringer, Allen & Heath, Midas, Soundcraft…) from a single interface, with real-time AI assistance and hands-free voice commands: auto-mix, feedback control, cloud scenes and remote supervision. Built in the field, by sound engineers."}
+                ? "AKLIMASOUND LOGICS est un logiciel SaaS qui unifie le contrôle de plusieurs consoles numériques de marques différentes (Yamaha, Behringer, Allen & Heath, Midas, Soundcraft…) depuis une seule interface, avec assistance IA en temps réel, commandes vocales mains libres et mode Apprentissage intégré : auto-mix, anti-larsen, scènes cloud et supervision à distance. Conçu sur le terrain, par des ingénieurs du son."
+                : "AKLIMASOUND LOGICS is a SaaS software that unifies the control of multiple digital consoles from different brands (Yamaha, Behringer, Allen & Heath, Midas, Soundcraft…) from a single interface, with real-time AI assistance, hands-free voice commands and a built-in Learning Mode: auto-mix, feedback control, cloud scenes and remote supervision. Built in the field, by sound engineers."}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <a href="#acces" className="btn btn-gold" data-track="logics_cta" data-label="accès anticipé"><Icon name="badge" className="h-4 w-4" /> {fr ? "Rejoindre l'accès anticipé" : "Join early access"}</a>
               <button onClick={() => send(fr ? "Bonjour Aklimasound, je souhaite des informations sur le logiciel AKLIMASOUND LOGICS (contrôle IA multiconsole multimarque + commandes vocales)." : "Hello Aklimasound, I would like information about the AKLIMASOUND LOGICS software (multi-brand AI multi-console control + voice commands).", CONTACT.wa2)} className="btn btn-wa" data-track="logics_cta" data-label="whatsapp">
-                <Icon name="chat" className="h-4 w-4" /> {fr ? `Parler du produit — ${CONTACT.wa2Display}` : `Talk about the product — ${CONTACT.wa2Display}`}
+                <Icon name="chat" className="h-4 w-4" /> {fr ? "Parler du produit" : "Talk about the product"}
               </button>
             </div>
           </Reveal>
@@ -170,6 +171,54 @@ export default function LogicsView() {
         </Reveal>
       </section>
 
+      {/* ---- Mode Apprentissage IA (accent produit) ---- */}
+      <section className="mx-auto max-w-6xl px-6 pt-8">
+        <Reveal>
+          <div className="glass overflow-hidden rounded-3xl border-gold/30 p-8 sm:p-10">
+            <div className="grid items-center gap-8 lg:grid-cols-[1fr_1fr]">
+              <div>
+                <span className="chip"><Icon name="graduation" className="h-3.5 w-3.5" /> {fr ? "Mode Apprentissage" : "Learning Mode"}</span>
+                <h2 className="mt-4 font-display text-2xl font-bold sm:text-3xl">
+                  {fr ? "Achetez une console complexe. Votre IA vous apprend à la maîtriser." : "Buy a complex console. Your AI teaches you to master it."}
+                </h2>
+                <p className="mt-4 text-sm leading-relaxed text-ivory/65">
+                  {fr
+                    ? "Une console numérique avancée ne doit plus faire peur. Le mode Apprentissage de LOGICS connaît votre modèle exact et vous guide selon votre niveau : chaque fonction complexe devient une suite d'étapes simples, expliquées en langage clair, au moment où vous en avez besoin."
+                    : "An advanced digital console should no longer be intimidating. LOGICS Learning Mode knows your exact model and guides you at your level: every complex function becomes a series of simple steps, explained in plain language, right when you need it."}
+                </p>
+                <ul className="mt-5 space-y-2 text-sm text-ivory/70">
+                  {(fr
+                    ? ["Tutoriels interactifs adaptés à votre modèle de console", "Guidage pas à pas en temps réel pendant vos réglages", "Parcours progressif : débutant → confirmé → expert", "Langage simple, sans jargon — en français et en anglais"]
+                    : ["Interactive tutorials matched to your console model", "Step-by-step guidance in real time while you adjust", "Progressive path: beginner → confident → expert", "Plain language, no jargon — in French and English"]
+                  ).map((x, i) => (
+                    <li key={i} className="flex items-start gap-2"><Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-gold" /> {x}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="space-y-3">
+                {(fr
+                  ? [
+                      { q: "« Comment couper les larsens sur cette console ? »", a: "L'IA montre chaque étape sur VOTRE modèle, en direct." },
+                      { q: "« Enregistre-moi les niveaux pour le culte de dimanche »", a: "Scène sauvegardée + explication de chaque réglage choisi." },
+                      { q: "« Apprends-moi la compression vocale »", a: "Mini-leçon pratique appliquée à votre propre mix." },
+                    ]
+                  : [
+                      { q: "“How do I stop feedback on this console?”", a: "The AI shows every step on YOUR model, live." },
+                      { q: "“Save the levels for Sunday service”", a: "Scene saved + explanation of every chosen setting." },
+                      { q: "“Teach me vocal compression”", a: "Hands-on mini-lesson applied to your own mix." },
+                    ]
+                ).map((x, i) => (
+                  <div key={i} className="rounded-2xl border border-ivory/10 bg-ink/60 p-4">
+                    <p className="font-display text-sm font-semibold text-gold/90">{x.q}</p>
+                    <p className="mt-1.5 text-xs text-ivory/60">→ {x.a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
       {/* ---- Fonctionnalités ---- */}
       <section className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -243,8 +292,8 @@ export default function LogicsView() {
               </form>
             )}
             <p className="mt-5 text-center text-xs text-ivory/50">
-              {fr ? "Question rapide ? WhatsApp produit : " : "Quick question? Product WhatsApp: "}
-              <button onClick={() => send(fr ? "Bonjour Aklimasound, j'ai une question sur le logiciel AKLIMASOUND LOGICS." : "Hello Aklimasound, I have a question about the AKLIMASOUND LOGICS software.", CONTACT.wa2)} className="font-semibold text-wa underline-offset-2 hover:underline">{CONTACT.wa2Display}</button>
+              {fr ? "Question rapide ? " : "Quick question? "}
+              <button onClick={() => send(fr ? "Bonjour Aklimasound, j'ai une question sur le logiciel AKLIMASOUND LOGICS." : "Hello Aklimasound, I have a question about the AKLIMASOUND LOGICS software.", CONTACT.wa2)} className="font-semibold text-wa underline-offset-2 hover:underline">{fr ? "Écrivez-nous sur WhatsApp" : "Message us on WhatsApp"}</button>
             </p>
           </div>
         </Reveal>
