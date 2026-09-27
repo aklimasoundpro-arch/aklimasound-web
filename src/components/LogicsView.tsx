@@ -8,15 +8,24 @@ import { Icon, IconTile } from "@/components/icons";
 import { useWa } from "@/components/WaGate";
 import { useI18n } from "@/lib/i18n";
 import { track } from "@/lib/track";
+import { CONTACT } from "@/lib/data";
 
 const FEATURES = [
-  { icon: "sliders", t: { fr: "Multiconsole par IA", en: "AI multi-console" }, d: { fr: "Pilotez plusieurs consoles numériques simultanément depuis une seule interface unifiée.", en: "Drive several digital consoles simultaneously from one unified interface." } },
+  { icon: "sliders", t: { fr: "Multiconsole & multimarque", en: "Multi-console & multi-brand" }, d: { fr: "Pilotez plusieurs consoles numériques de marques différentes — Yamaha, Behringer, Allen & Heath, Midas, Soundcraft, PreSonus… — depuis une seule interface unifiée.", en: "Drive several digital consoles from different brands — Yamaha, Behringer, Allen & Heath, Midas, Soundcraft, PreSonus… — from one unified interface." } },
+  { icon: "mic", t: { fr: "Contrôle & commandes vocales", en: "Voice control & commands" }, d: { fr: "Pilotez le son à la voix, mains libres : « monte la voix lead », « baisse les retours », « coupe le micro 3 », « mute le groupe ». Reconnaissance vocale en français et en anglais, personnalisable selon votre vocabulaire de scène.", en: "Control sound hands-free by voice: “raise the lead vocal”, “lower the monitors”, “mute mic 3”. Voice recognition in French and English, customisable to your stage vocabulary." } },
   { icon: "zap", t: { fr: "Auto-mix intelligent", en: "Intelligent auto-mix" }, d: { fr: "Gains, égalisation et détection de larsen ajustés en temps réel par l'IA.", en: "Gains, EQ and feedback detection adjusted in real time by AI." } },
   { icon: "phone", t: { fr: "Contrôle à distance", en: "Remote control" }, d: { fr: "Réglez le son depuis tablette, téléphone ou PC — sur site ou à distance.", en: "Adjust sound from tablet, phone or PC — on site or remotely." } },
   { icon: "package", t: { fr: "Scènes dans le cloud", en: "Cloud scenes" }, d: { fr: "Sauvegardez et rappelez scènes et profils par lieu, événement ou équipe.", en: "Save and recall scenes and profiles per venue, event or team." } },
   { icon: "camera", t: { fr: "Supervision live", en: "Live supervision" }, d: { fr: "Vumètres, alertes et journal détaillé de chaque session en direct.", en: "Meters, alerts and detailed log of every session, live." } },
   { icon: "badge", t: { fr: "SaaS sans installation", en: "SaaS, no install" }, d: { fr: "Abonnement par poste, mises à jour continues incluses, aucun serveur à gérer.", en: "Per-seat subscription, continuous updates included, no server to manage." } },
 ];
+
+const BRANDS = ["Yamaha", "Behringer", "Allen & Heath", "Midas", "Soundcraft", "PreSonus", "Mackie", "Roland"];
+
+const VOICE_EXAMPLES = {
+  fr: ["« Monte la voix lead »", "« Baisse les retours de 3 dB »", "« Coupe le micro 3 »", "« Mute le groupe batterie »", "« Rappelle la scène culte »"],
+  en: ["“Raise the lead vocal”", "“Lower the monitors by 3 dB”", "“Mute mic 3”", "“Mute the drum group”", "“Recall the worship scene”"],
+};
 
 const AUDIENCE = [
   { fr: "Ingénieurs du son & régisseurs", en: "Sound engineers & stage managers" },
@@ -56,7 +65,7 @@ export default function LogicsView() {
   return (
     <>
       <Navbar onQuote={() => setOpen(true)} />
-      <QuoteModal open={open} onClose={() => setOpen(false)} preset="AKLIMASOUND LOGICS" />
+      <QuoteModal open={open} onClose={() => setOpen(false)} preset="AKLIMASOUND LOGICS" wa={CONTACT.wa2} />
 
       {/* ---- Hero ---- */}
       <section className="relative overflow-hidden pb-20 pt-36">
@@ -66,21 +75,99 @@ export default function LogicsView() {
             <span className="chip mx-auto"><Icon name="zap" className="h-3.5 w-3.5" /> {fr ? "En développement — accès anticipé ouvert" : "In development — early access open"}</span>
             <p className="mt-6 font-display text-sm font-bold uppercase tracking-[0.5em] text-gold">Aklimasound Logics</p>
             <h1 className="mt-4 font-display text-4xl font-bold leading-tight sm:text-5xl">
-              {fr ? "Le contrôle par IA de vos consoles numériques" : "AI-powered control of your digital consoles"}
+              {fr ? "Toutes vos consoles numériques. Toutes marques. Une seule interface, pilotée par IA et à la voix." : "All your digital consoles. All brands. One interface, driven by AI and voice."}
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-ivory/65">
               {fr
-                ? "Un logiciel SaaS qui pilote plusieurs consoles de mixage numériques depuis une seule interface, avec une assistance IA en temps réel : auto-mix, anti-larsen, scènes cloud et supervision à distance. Conçu sur le terrain, par des ingénieurs du son."
-                : "A SaaS software that drives multiple digital mixing consoles from a single interface, with real-time AI assistance: auto-mix, feedback control, cloud scenes and remote supervision. Built in the field, by sound engineers."}
+                ? "AKLIMASOUND LOGICS est un logiciel SaaS qui unifie le contrôle de plusieurs consoles numériques de marques différentes (Yamaha, Behringer, Allen & Heath, Midas, Soundcraft…) depuis une seule interface, avec assistance IA en temps réel et commandes vocales mains libres : auto-mix, anti-larsen, scènes cloud et supervision à distance. Conçu sur le terrain, par des ingénieurs du son."
+                : "AKLIMASOUND LOGICS is a SaaS software that unifies the control of multiple digital consoles from different brands (Yamaha, Behringer, Allen & Heath, Midas, Soundcraft…) from a single interface, with real-time AI assistance and hands-free voice commands: auto-mix, feedback control, cloud scenes and remote supervision. Built in the field, by sound engineers."}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <a href="#acces" className="btn btn-gold" data-track="logics_cta" data-label="accès anticipé"><Icon name="badge" className="h-4 w-4" /> {fr ? "Rejoindre l'accès anticipé" : "Join early access"}</a>
-              <button onClick={() => send(fr ? "Bonjour Aklimasound, je souhaite des informations sur le logiciel AKLIMASOUND LOGICS (contrôle IA multiconsole)." : "Hello Aklimasound, I would like information about the AKLIMASOUND LOGICS software (AI multi-console control).")} className="btn btn-wa" data-track="logics_cta" data-label="whatsapp">
-                <Icon name="chat" className="h-4 w-4" /> {fr ? "Parler du produit" : "Talk about the product"}
+              <button onClick={() => send(fr ? "Bonjour Aklimasound, je souhaite des informations sur le logiciel AKLIMASOUND LOGICS (contrôle IA multiconsole multimarque + commandes vocales)." : "Hello Aklimasound, I would like information about the AKLIMASOUND LOGICS software (multi-brand AI multi-console control + voice commands).", CONTACT.wa2)} className="btn btn-wa" data-track="logics_cta" data-label="whatsapp">
+                <Icon name="chat" className="h-4 w-4" /> {fr ? `Parler du produit — ${CONTACT.wa2Display}` : `Talk about the product — ${CONTACT.wa2Display}`}
               </button>
             </div>
           </Reveal>
         </div>
+      </section>
+
+      {/* ---- Multi-marques (accent produit) ---- */}
+      <section className="mx-auto max-w-6xl px-6 pt-16">
+        <Reveal>
+          <div className="glass overflow-hidden rounded-3xl border-gold/30 p-8 sm:p-10">
+            <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_1fr]">
+              <div>
+                <span className="chip"><Icon name="cable" className="h-3.5 w-3.5" /> {fr ? "Compatibilité multi-marques" : "Multi-brand compatibility"}</span>
+                <h2 className="mt-4 font-display text-2xl font-bold sm:text-3xl">
+                  {fr ? "Une seule interface pour toutes vos consoles — quelles que soient les marques" : "One interface for all your consoles — whatever the brands"}
+                </h2>
+                <p className="mt-4 text-sm leading-relaxed text-ivory/65">
+                  {fr
+                    ? "Salle équipée en Yamaha, église en Behringer, prestataire en Allen & Heath ? LOGICS parle le langage de chaque console et les réunit dans un contrôle unique et cohérent. Mixez plusieurs événements, plusieurs salles, plusieurs marques — simultanément, sans changer d'application ni de protocole."
+                    : "Venue on Yamaha, church on Behringer, rental company on Allen & Heath? LOGICS speaks each console's language and unites them under one consistent control. Mix several events, several rooms, several brands — simultaneously, without switching apps or protocols."}
+                </p>
+                <ul className="mt-5 space-y-2 text-sm text-ivory/70">
+                  {(fr
+                    ? ["Détection automatique des consoles sur le réseau", "Mappage unifié : vos repères restent les mêmes d'une marque à l'autre", "Ajout de nouvelles marques par mises à jour SaaS continues"]
+                    : ["Automatic console discovery on the network", "Unified mapping: your references stay the same across brands", "New brands added through continuous SaaS updates"]
+                  ).map((x, i) => (
+                    <li key={i} className="flex items-start gap-2"><Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-gold" /> {x}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {BRANDS.map((b, i) => (
+                  <div key={b} className="flex items-center justify-center rounded-2xl border border-ivory/12 bg-white/[0.04] px-3 py-4 text-center font-display text-sm font-bold tracking-wide text-ivory/80" style={{ animationDelay: `${i * 0.05}s` }}>
+                    {b}
+                  </div>
+                ))}
+                <p className="col-span-2 pt-1 text-center text-[11px] text-ivory/40">
+                  {fr ? "Marques citées à titre indicatif — liste de compatibilité confirmée à la sortie de la bêta." : "Brands mentioned for guidance — compatibility list confirmed at beta release."}
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ---- Commandes vocales (accent produit) ---- */}
+      <section className="mx-auto max-w-6xl px-6 pt-8">
+        <Reveal>
+          <div className="glass overflow-hidden rounded-3xl border-copper/30 p-8 sm:p-10">
+            <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
+              <div className="order-2 lg:order-1">
+                <div className="space-y-2.5">
+                  {VOICE_EXAMPLES[lang].map((v, i) => (
+                    <div key={i} className="flex items-center gap-3 rounded-2xl border border-ivory/10 bg-ink/60 px-4 py-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-copper/15 text-copper"><Icon name="mic" className="h-4 w-4" /></span>
+                      <p className="font-display text-sm font-semibold text-ivory/85">{v}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="order-1 lg:order-2">
+                <span className="chip !border-copper/40 !text-copper"><Icon name="mic" className="h-3.5 w-3.5" /> {fr ? "Contrôle vocal" : "Voice control"}</span>
+                <h2 className="mt-4 font-display text-2xl font-bold sm:text-3xl">
+                  {fr ? "Parlez, LOGICS exécute — les mains libres pendant le show" : "Speak, LOGICS executes — hands-free during the show"}
+                </h2>
+                <p className="mt-4 text-sm leading-relaxed text-ivory/65">
+                  {fr
+                    ? "Pendant un culte, un concert ou un discours, chaque seconde compte. Les commandes vocales de LOGICS exécutent vos ordres instantanément : niveaux, mutes, scènes, groupes — sans quitter le plateau des yeux ni lâcher la tablette. L'IA apprend vos habitudes et votre vocabulaire pour réagir toujours plus vite et plus juste."
+                    : "During a service, concert or speech, every second counts. LOGICS voice commands execute your orders instantly: levels, mutes, scenes, groups — without taking your eyes off the stage or putting down the tablet. The AI learns your habits and vocabulary to react faster and more accurately."}
+                </p>
+                <ul className="mt-5 space-y-2 text-sm text-ivory/70">
+                  {(fr
+                    ? ["Français & anglais, vocabulaire de scène personnalisable", "Confirmation visuelle instantanée de chaque commande exécutée", "Mode silencieux : contrôle gestuel/tactile si l'environnement est bruyant"]
+                    : ["French & English, customisable stage vocabulary", "Instant visual confirmation of every executed command", "Silent mode: gesture/touch control in noisy environments"]
+                  ).map((x, i) => (
+                    <li key={i} className="flex items-start gap-2"><Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-copper" /> {x}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* ---- Fonctionnalités ---- */}
@@ -155,6 +242,10 @@ export default function LogicsView() {
                 </p>
               </form>
             )}
+            <p className="mt-5 text-center text-xs text-ivory/50">
+              {fr ? "Question rapide ? WhatsApp produit : " : "Quick question? Product WhatsApp: "}
+              <button onClick={() => send(fr ? "Bonjour Aklimasound, j'ai une question sur le logiciel AKLIMASOUND LOGICS." : "Hello Aklimasound, I have a question about the AKLIMASOUND LOGICS software.", CONTACT.wa2)} className="font-semibold text-wa underline-offset-2 hover:underline">{CONTACT.wa2Display}</button>
+            </p>
           </div>
         </Reveal>
       </section>

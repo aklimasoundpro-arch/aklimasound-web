@@ -52,7 +52,7 @@ export function SignupModal() {
 }
 
 /** Formulaire de devis (pop-up sécurisée : validation client + honeypot) */
-export function QuoteModal({ open, onClose, preset }: { open: boolean; onClose: () => void; preset?: string }) {
+export function QuoteModal({ open, onClose, preset, wa }: { open: boolean; onClose: () => void; preset?: string; wa?: string }) {
   const { t, lang } = useI18n();
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState("");
@@ -82,7 +82,7 @@ export function QuoteModal({ open, onClose, preset }: { open: boolean; onClose: 
       `• Formule : ${preset || fd.get("offer")}\n` +
       `• Date : ${fd.get("date") || "à définir"}\n• Lieu : ${fd.get("place") || "-"}\n` +
       `• Message : ${fd.get("msg") || "-"}`;
-    window.open(waLink(CONTACT.wa1, msg), "_blank");
+    window.open(waLink(wa || CONTACT.wa1, msg), "_blank");
     setSent(true);
   };
 

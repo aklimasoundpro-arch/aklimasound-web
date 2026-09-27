@@ -7,11 +7,12 @@ import { useI18n } from "@/lib/i18n";
 import { track, fbqEvent } from "@/lib/track";
 
 export type Lead = { name: string; phone: string; email: string };
-const Ctx = createContext<{ send: (msg: string) => void }>({ send: () => {} });
+const Ctx = createContext<{ send: (msg: string, to?: string) => void }>({ send: () => {} });
 export const useWa = () => useContext(Ctx);
 
 /**
- * Porte d'entrée WhatsApp : numéro unique (+228 97 67 57 64).
+ * Porte d'entrée WhatsApp : numéro principal (+228 97 67 57 64) par défaut ;
+ * un autre numéro peut être ciblé (ex. AKLIMASOUND LOGICS → +228 97 82 97 99).
  * Si le visiteur n'est pas connu (pas de fiche capturée / pas connecté),
  * une fenêtre capture nom+prénom, numéro WhatsApp et e-mail AVANT la redirection.
  */
@@ -19,24 +20,26 @@ export function WaProvider({ children }: { children: ReactNode }) {
   const { lang } = useI18n();
   const fr = lang === "fr";
   const [pending, setPending] = useState<string | null>(null);
+  const [pendingTo, setPendingTo] = useState<string | undefined>(undefined);
   const [err, setErr] = useState("");
 
-  const openWa = (msg: string, lead?: Lead) => {
+  const openWa = (msg: string, lead?: Lead, to?: string) => {
     const full = lead
       ? `${msg}\n---\n${fr ? "Nom" : "Name"} : ${lead.name}\nWhatsApp : ${lead.phone}\nEmail : ${lead.email}`
       : msg;
     track("whatsapp_open", { label: msg.split("\n")[0].slice(0, 100), known: !!lead });
     fbqEvent("Contact");
-    window.open(waLink(CONTACT.wa1, full), "_blank", "noopener");
+    window.open(waLink(to || CONTACT.wa1, full), "_blank", "noopener");
   };
 
-  const send = (msg: string) => {
+  const send = (msg: string, to?: string) => {
     const raw = store.get("aks_lead");
     if (raw) {
-      try { openWa(msg, JSON.parse(raw) as Lead); return; } catch { /* fiche illisible : recapturer */ }
+      try { openWa(msg, JSON.parse(raw) as Lead, to); return; } catch { /* fiche illisible : recapturer */ }
     }
     setErr("");
     setPending(msg);
+    setPendingTo(to);
   };
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
@@ -59,8 +62,10 @@ export function WaProvider({ children }: { children: ReactNode }) {
     track("lead_captured", { label: "porte WhatsApp" });
     fbqEvent("Lead");
     const msg = pending ?? "Bonjour Aklimasound !";
+    const to = pendingTo;
     setPending(null);
-    openWa(msg, lead);
+    setPendingTo(undefined);
+    openWa(msg, lead, to);
   };
 
   return (

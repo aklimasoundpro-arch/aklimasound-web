@@ -1,6 +1,8 @@
 export const CONTACT = {
-  wa1: "22897675764", // SEUL numéro de redirection WhatsApp
+  wa1: "22897675764", // numéro WhatsApp principal du site
   wa1Display: "+228 97 67 57 64",
+  wa2: "22897829799", // numéro WhatsApp dédié AKLIMASOUND LOGICS
+  wa2Display: "+228 97 82 97 99",
   phones: [
     { tel: "+22897675764", display: "+228 97 67 57 64" },
     { tel: "+22897829799", display: "+228 97 82 97 99" },

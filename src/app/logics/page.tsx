@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import LogicsView from "@/components/LogicsView";
 
 export const metadata: Metadata = {
-  title: "AKLIMASOUND LOGICS — Logiciel de contrôle par IA multiconsole",
+  title: "AKLIMASOUND LOGICS — Contrôle IA multiconsole multimarque & commandes vocales",
   description:
-    "AKLIMASOUND LOGICS : logiciel SaaS de contrôle par IA de plusieurs consoles de mixage numériques depuis une seule interface. Auto-mix intelligent, contrôle à distance, scènes cloud. Accès anticipé ouvert.",
-  keywords: ["logiciel sonorisation", "contrôle IA console", "SaaS audio", "multi-console", "Aklimasound Logics", "auto-mix IA"],
+    "AKLIMASOUND LOGICS : logiciel SaaS qui unifie le contrôle de plusieurs consoles numériques de marques différentes (Yamaha, Behringer, Allen & Heath, Midas…) avec IA temps réel et commandes vocales mains libres. Auto-mix, anti-larsen, scènes cloud. Accès anticipé ouvert.",
+  keywords: ["logiciel sonorisation", "contrôle IA console", "SaaS audio", "multi-console", "multimarque", "commandes vocales", "Aklimasound Logics", "auto-mix IA"],
   openGraph: {
-    title: "AKLIMASOUND LOGICS — Le contrôle par IA de vos consoles numériques",
-    description: "Logiciel SaaS multiconsole avec assistance IA : auto-mix, contrôle à distance, scènes cloud. Accès anticipé ouvert.",
+    title: "AKLIMASOUND LOGICS — Toutes vos consoles, toutes marques, une seule interface IA + voix",
+    description: "Logiciel SaaS multiconsole multimarque avec assistance IA et commandes vocales : auto-mix, contrôle à distance, scènes cloud. Accès anticipé ouvert.",
   },
 };
 
