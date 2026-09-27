@@ -1,0 +1,4 @@
+Contact: mailto:aklimasoundpro@gmail.com
+Expires: 2027-09-27T00:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://aklimasound.tg/.well-known/security.txt
