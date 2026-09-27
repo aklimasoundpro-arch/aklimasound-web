@@ -3,11 +3,28 @@ import { addRow, notify, rateOk } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-const str = (v: unknown, max: number) => String(v ?? "").trim().slice(0, max);
+const str = (v: unknown, max: number) =>
+  String(v ?? "")
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "") // caractères de contrôle dangereux (octet nul…) — \t \n \r conservés
+    .trim()
+    .slice(0, max);
 const num = (v: unknown) => {
   const n = Number(v);
   return Number.isFinite(n) && n >= 0 ? Math.round(n) : 0;
 };
+
+/** Lit le corps en texte puis mesure sa taille réelle — impossible à contourner
+ *  par Transfer-Encoding: chunked (absence de Content-Length). */
+async function readBody(req: Request, maxBytes: number) {
+  const raw = await req.text().catch(() => "");
+  if (raw.length > maxBytes) return { tooBig: true as const, body: null };
+  try {
+    const b = JSON.parse(raw);
+    return { tooBig: false as const, body: b && typeof b === "object" ? (b as Record<string, unknown>) : null };
+  } catch {
+    return { tooBig: false as const, body: null };
+  }
+}
 
 /** Soumissions publiques : leads, devis, réservations. POST uniquement. */
 export async function POST(req: Request, ctx: { params: Promise<{ col: string }> }) {
@@ -16,11 +33,8 @@ export async function POST(req: Request, ctx: { params: Promise<{ col: string }>
   if (!rateOk(`pub:${col}:${ip}`, 6, 60_000)) {
     return NextResponse.json({ ok: false, error: "Trop de demandes. Réessayez dans une minute." }, { status: 429 });
   }
-  // Anti-DoS : corps de requête borné (formulaires normaux < 2 Ko)
-  if (Number(req.headers.get("content-length") ?? 0) > 100_000) {
-    return NextResponse.json({ ok: false, error: "Charge trop volumineuse." }, { status: 413 });
-  }
-  const b = await req.json().catch(() => null) as Record<string, unknown> | null;
+  const { tooBig, body: b } = await readBody(req, 100_000);
+  if (tooBig) return NextResponse.json({ ok: false, error: "Charge trop volumineuse." }, { status: 413 });
   if (!b || str(b.website, 20)) return NextResponse.json({ ok: false }, { status: 400 }); // honeypot
 
   if (col === "leads") {

@@ -23,7 +23,9 @@ export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for") ?? "local";
   let body: Record<string, string>;
   try {
-    body = await req.json();
+    const raw = await req.text();
+    if (raw.length > 10_000) return NextResponse.json({ ok: false, error: "Charge trop volumineuse." }, { status: 413 });
+    body = JSON.parse(raw);
   } catch {
     return NextResponse.json({ ok: false, error: "Requête invalide." }, { status: 400 });
   }
