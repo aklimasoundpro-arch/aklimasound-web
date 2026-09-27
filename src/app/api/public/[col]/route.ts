@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addRow, notify, rateOk } from "@/lib/db";
+import { addRow, ipOf, notify, rateOk } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +29,7 @@ async function readBody(req: Request, maxBytes: number) {
 /** Soumissions publiques : leads, devis, réservations. POST uniquement. */
 export async function POST(req: Request, ctx: { params: Promise<{ col: string }> }) {
   const { col } = await ctx.params;
-  const ip = req.headers.get("x-forwarded-for") ?? "local";
+  const ip = ipOf(req);
   if (!rateOk(`pub:${col}:${ip}`, 6, 60_000)) {
     return NextResponse.json({ ok: false, error: "Trop de demandes. Réessayez dans une minute." }, { status: 429 });
   }

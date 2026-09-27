@@ -176,3 +176,15 @@ export function rateOk(key: string, max = 6, windowMs = 60_000): boolean {
   h.n += 1;
   return h.n <= max;
 }
+
+/**
+ * IP client fiable : la DERNIÈRE valeur de X-Forwarded-For est celle ajoutée par le
+ * proxy le plus proche (edge Netlify). Les valeurs précédentes sont contrôlables par
+ * le client → les ignorer empêche le contournement des quotas par rotation d'IP forgées.
+ */
+export function ipOf(req: Request): string {
+  const xff = req.headers.get("x-forwarded-for");
+  if (!xff) return "local";
+  const ip = xff.split(",").pop()?.trim() ?? "";
+  return /^[0-9a-fA-F.:]{7,45}$/.test(ip) ? ip : "local";
+}

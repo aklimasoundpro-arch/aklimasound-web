@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addRow, rateOk } from "@/lib/db";
+import { addRow, ipOf, rateOk } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ const str = (v: unknown, max: number) =>
  * Volume plus élevé que les formulaires : limite dédiée, anneaux de 5 000 événements.
  */
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for") ?? "local";
+  const ip = ipOf(req);
   if (!rateOk(`ev:${ip}`, 120, 60_000)) return NextResponse.json({ ok: false }, { status: 429 });
   // Anti-DoS : taille réelle du corps (insensible à Transfer-Encoding: chunked sans Content-Length)
   const raw = await req.text().catch(() => "");

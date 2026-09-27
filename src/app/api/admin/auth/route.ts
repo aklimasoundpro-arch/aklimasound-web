@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { COOKIE, makeToken, rateOk, rateReset, setPassword, verifyPass, verifyToken } from "@/lib/db";
+import { COOKIE, ipOf, makeToken, rateOk, rateReset, setPassword, verifyPass, verifyToken } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for") ?? "local";
+  const ip = ipOf(req);
   let body: Record<string, string>;
   try {
     const raw = await req.text();

@@ -29,7 +29,14 @@ export async function POST(req: Request, ctx: { params: Promise<{ col: string }>
   if (!(await authed(req))) return NextResponse.json({ error: "non autorisé" }, { status: 401 });
   const { col } = await ctx.params;
   if (!COLS.includes(col as Col)) return NextResponse.json({ error: "collection inconnue" }, { status: 404 });
-  const body = await req.json().catch(() => null);
+  let body: unknown = null;
+  try {
+    const raw = await req.text();
+    if (raw.length > 100_000) return NextResponse.json({ error: "charge trop volumineuse" }, { status: 413 });
+    body = JSON.parse(raw);
+  } catch {
+    body = null;
+  }
   if (!body || typeof body !== "object") return NextResponse.json({ error: "corps invalide" }, { status: 400 });
   const row = addRow(col as Col, body as Record<string, unknown>);
   return NextResponse.json(row, { status: 201 });
@@ -38,7 +45,14 @@ export async function POST(req: Request, ctx: { params: Promise<{ col: string }>
 export async function PATCH(req: Request, ctx: { params: Promise<{ col: string }> }) {
   if (!(await authed(req))) return NextResponse.json({ error: "non autorisé" }, { status: 401 });
   const { col } = await ctx.params;
-  const body = await req.json().catch(() => null);
+  let body: unknown = null;
+  try {
+    const raw = await req.text();
+    if (raw.length > 100_000) return NextResponse.json({ error: "charge trop volumineuse" }, { status: 413 });
+    body = JSON.parse(raw);
+  } catch {
+    body = null;
+  }
   if (!body || typeof body !== "object") return NextResponse.json({ error: "corps invalide" }, { status: 400 });
   const { id, ...rest } = body as Record<string, unknown> & { id?: string };
 
