@@ -5,6 +5,7 @@ import { CONTACT, waLink } from "@/lib/data";
 import { Icon } from "./icons";
 import { useI18n } from "@/lib/i18n";
 import { track, fbqEvent } from "@/lib/track";
+import { PhoneInput } from "./PhoneInput";
 
 export type Lead = { name: string; phone: string; email: string };
 const Ctx = createContext<{ send: (msg: string, to?: string) => void }>({ send: () => {} });
@@ -50,7 +51,7 @@ export function WaProvider({ children }: { children: ReactNode }) {
     const phone = String(fd.get("phone") || "").trim();
     const email = String(fd.get("email") || "").trim();
     if (name.length < 5 || name.split(/\s+/).length < 2) return setErr(fr ? "Merci d'indiquer votre nom et votre prénom." : "Please enter your first and last name.");
-    if (!/^[+0-9 ().-]{8,20}$/.test(phone)) return setErr(fr ? "Numéro WhatsApp invalide." : "Invalid WhatsApp number.");
+    if (!/^\+[0-9 ().-]{8,20}$/.test(phone)) return setErr(fr ? "Numéro WhatsApp invalide." : "Invalid WhatsApp number.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return setErr(fr ? "Adresse e-mail invalide." : "Invalid email address.");
     const lead: Lead = { name, phone, email };
     store.set("aks_lead", JSON.stringify(lead));
@@ -94,7 +95,7 @@ export function WaProvider({ children }: { children: ReactNode }) {
             </p>
             <form onSubmit={submit} className="mt-5 space-y-3">
               <input className="input" name="name" maxLength={80} placeholder={fr ? "Nom & prénom *" : "First & last name *"} autoFocus />
-              <input className="input" name="phone" maxLength={20} placeholder={fr ? "Votre numéro WhatsApp *" : "Your WhatsApp number *"} />
+              <PhoneInput />
               <input className="input" name="email" type="email" maxLength={120} placeholder={fr ? "Votre e-mail *" : "Your email *"} />
               <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden />
               {err && <p className="text-sm text-live">{err}</p>}

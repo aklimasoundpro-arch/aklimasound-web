@@ -7,6 +7,7 @@ import { CONTACT, fcfa, waLink } from "@/lib/data";
 import { Icon } from "./icons";
 import { useWa } from "./WaGate";
 import { api } from "@/lib/admin-api";
+import { PhoneInput } from "./PhoneInput";
 import { track, fbqEvent } from "@/lib/track";
 
 function Shell({ open, onClose, children, wide }: { open: boolean; onClose: () => void; children: React.ReactNode; wide?: boolean }) {
@@ -66,7 +67,7 @@ export function QuoteModal({ open, onClose, preset, wa }: { open: boolean; onClo
     const phone = String(fd.get("phone") || "").trim();
     const email = String(fd.get("email") || "").trim();
     if (name.length < 2) return setErr(lang === "fr" ? "Nom invalide." : "Invalid name.");
-    if (!/^[+0-9 ().-]{8,20}$/.test(phone)) return setErr(lang === "fr" ? "Numéro de téléphone invalide." : "Invalid phone number.");
+    if (!/^\+[0-9 ().-]{8,20}$/.test(phone)) return setErr(lang === "fr" ? "Numéro de téléphone invalide." : "Invalid phone number.");
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return setErr(lang === "fr" ? "Adresse e-mail invalide." : "Invalid email address.");
     if (name.split(/\s+/).length >= 2 && email) store.set("aks_lead", JSON.stringify({ name, phone, email }));
     api.pub("quotes", {
@@ -105,7 +106,7 @@ export function QuoteModal({ open, onClose, preset, wa }: { open: boolean; onClo
           <p className="text-sm text-ivory/60">{lang === "fr" ? "Réponse rapide sur WhatsApp ou par e-mail. Aucune donnée bancaire demandée." : "Fast reply on WhatsApp or by email. No banking data requested."}</p>
           <div className="grid gap-4 sm:grid-cols-2">
             <input className="input" name="name" placeholder={lang === "fr" ? "Nom complet *" : "Full name *"} maxLength={80} />
-            <input className="input" name="phone" placeholder={lang === "fr" ? "Téléphone / WhatsApp *" : "Phone / WhatsApp *"} maxLength={20} />
+            <PhoneInput />
           </div>
           <input className="input" name="email" type="email" placeholder={lang === "fr" ? "E-mail (recommandé)" : "Email (recommended)"} maxLength={120} />
           <div className="grid gap-4 sm:grid-cols-2">
@@ -147,7 +148,7 @@ export function BookingModal({ open, onClose, offer }: { open: boolean; onClose:
     const name = String(fd.get("name") || "").trim();
     const phone = String(fd.get("phone") || "").trim();
     const proofRef = String(fd.get("proofRef") || "").trim();
-    if (name.length < 2 || !/^[+0-9 ().-]{8,20}$/.test(phone) || proofRef.length < 3) {
+    if (name.length < 2 || !/^\+[0-9 ().-]{8,20}$/.test(phone) || proofRef.length < 3) {
       return setDeclared(lang === "fr" ? "err" : "err");
     }
     api.pub("bookings", {
@@ -207,7 +208,7 @@ export function BookingModal({ open, onClose, offer }: { open: boolean; onClose:
           <form onSubmit={declareProof} className="space-y-2.5">
             <p className="text-xs text-ivory/60">{lang === "fr" ? "Vous avez déjà envoyé l'acompte ? Déclarez-le ici : la demande part directement dans notre espace de gestion pour validation." : "Already sent the deposit? Declare it here: it goes straight to our management space for validation."}</p>
             <input className="input !py-2 text-sm" name="name" maxLength={80} placeholder={lang === "fr" ? "Nom / organisation *" : "Name / organization *"} />
-            <input className="input !py-2 text-sm" name="phone" maxLength={20} placeholder={lang === "fr" ? "Téléphone / WhatsApp *" : "Phone / WhatsApp *"} />
+            <PhoneInput compact />
             <input className="input !py-2 text-sm" name="email" type="email" maxLength={120} placeholder={lang === "fr" ? "E-mail (optionnel)" : "Email (optional)"} />
             <div className="grid grid-cols-2 gap-2.5">
               <select className="input !py-2 text-sm" name="depositRate" defaultValue={30}>

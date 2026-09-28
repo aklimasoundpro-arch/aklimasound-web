@@ -10,6 +10,7 @@ import { useI18n } from "@/lib/i18n";
 import { track } from "@/lib/track";
 import { store } from "@/lib/store";
 import { CONTACT } from "@/lib/data";
+import { PhoneInput } from "./PhoneInput";
 
 const FEATURES = [
   { icon: "sliders", t: { fr: "Multiconsole & multimarque", en: "Multi-console & multi-brand" }, d: { fr: "Pilotez plusieurs consoles numériques de marques différentes — Yamaha, Behringer, Allen & Heath, Midas, Soundcraft, PreSonus… — depuis une seule interface unifiée.", en: "Drive several digital consoles from different brands — Yamaha, Behringer, Allen & Heath, Midas, Soundcraft, PreSonus… — from one unified interface." } },
@@ -51,6 +52,7 @@ export default function LogicsView() {
     const email = String(fd.get("email") || "").trim();
     const phone = String(fd.get("phone") || "").trim();
     if (name.length < 2 || (!email && !phone)) return setState("error");
+    if (phone && !/^\+[0-9 ().-]{7,20}$/.test(phone)) return setState("error"); // indicatif obligatoire si téléphone fourni
     setState("sending");
     const lh: Record<string, string> = { "Content-Type": "application/json" };
     try { const mt = store.get("aks_member_tok"); if (mt) lh["x-aks-member"] = mt; } catch { /* stockage indisponible */ }
@@ -274,7 +276,7 @@ export default function LogicsView() {
                 <input className="input" name="name" maxLength={80} placeholder={fr ? "Nom complet *" : "Full name *"} />
                 <div className="grid gap-3 sm:grid-cols-2">
                   <input className="input" name="email" type="email" maxLength={120} placeholder={fr ? "E-mail" : "Email"} />
-                  <input className="input" name="phone" maxLength={20} placeholder={fr ? "WhatsApp" : "WhatsApp"} />
+                  <PhoneInput world required={false} />
                 </div>
                 <select className="input" name="profile" defaultValue="">
                   <option value="" className="bg-ink">{fr ? "Votre profil" : "Your profile"}</option>

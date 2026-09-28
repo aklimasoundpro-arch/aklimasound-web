@@ -53,7 +53,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ col: string }>
 
     if (col === "leads") {
       const name = str(b.name, 80), phone = str(b.phone, 20), email = str(b.email, 120);
-      if (name.length < 5 || !/^[+0-9 ().-]{8,20}$/.test(phone)) return NextResponse.json({ ok: false }, { status: 400 });
+      if (name.length < 5 || !/^\+[0-9 ().-]{7,19}$/.test(phone)) return NextResponse.json({ ok: false }, { status: 400 });
       const source = str(b.source, 40) || "WhatsApp (porte)";
       await addRow("leads", { name, phone, email, source, memberId });
       await notify(`Nouveau lead — ${name} (${source})`, "badge", source.startsWith("LOGICS"));
@@ -62,7 +62,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ col: string }>
 
     if (col === "quotes") {
       const name = str(b.name, 80), phone = str(b.phone, 20);
-      if (name.length < 2 || !/^[+0-9 ().-]{8,20}$/.test(phone)) return NextResponse.json({ ok: false }, { status: 400 });
+      if (name.length < 2 || !/^\+[0-9 ().-]{7,19}$/.test(phone)) return NextResponse.json({ ok: false }, { status: 400 });
       const offer = str(b.offer, 80) || "À conseiller";
       await addRow("quotes", {
         name, phone, email: str(b.email, 120), domain: str(b.domain, 60), offer,
@@ -76,7 +76,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ col: string }>
 
     if (col === "bookings") {
       const customer = str(b.customer, 80), phone = str(b.phone, 20);
-      if (customer.length < 2 || !/^[+0-9 ().-]{8,20}$/.test(phone)) return NextResponse.json({ ok: false }, { status: 400 });
+      if (customer.length < 2 || !/^\+[0-9 ().-]{7,19}$/.test(phone)) return NextResponse.json({ ok: false }, { status: 400 });
       const rate = num(b.depositRate) === 50 ? 50 : 30;
       const total = num(b.total);
       const deposit = total ? Math.round((total * rate) / 100 / 500) * 500 : 0;
