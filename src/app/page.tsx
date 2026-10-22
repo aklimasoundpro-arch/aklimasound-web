@@ -43,17 +43,11 @@ export default function Home() {
           </div>
           {/* Rangée des 5 métiers : bande fidèle de l'affiche sur grand écran… */}
           <Reveal delay={0.25}>
-            <Image src="/img/poster/services-strip.png" alt="Nos 5 métiers : sonorisation, mixage, régie événementielle, installation et optimisation audio, écoute expertise" width={1254} height={156} sizes="(max-width:1400px) 100vw, 1400px" className="hidden h-auto w-full lg:block" />
-            {/* …tuiles agrandies et lisibles sur mobile et tablette */}
-            <div className="flex flex-wrap items-start justify-center gap-x-6 gap-y-5 px-6 py-7 lg:hidden">
-              {([["svc-1", "Sonorisation"], ["svc-2", "Mixage"], ["svc-3", "Régie événementielle"], ["svc-4", "Installation & optimisation audio"], ["svc-5", "Écoute expertise"]] as const).map(([sl, slabel]) => (
-                <Image key={sl} src={`/img/poster/${sl}.png`} alt={slabel} width={220} height={151} sizes="(max-width:640px) 40vw, 25vw" className="block h-auto w-36 sm:w-44" />
-              ))}
-            </div>
+            <Image src="/img/poster/services-strip.png" alt="Nos 5 métiers : sonorisation, mixage, régie événementielle, installation et optimisation audio, écoute expertise" width={1254} height={156} sizes="(max-width:1400px) 100vw, 1400px" className="block h-auto w-full" />
           </Reveal>
         </div>
         {/* Informations textuelles du site : sous le dernier texte de l'affiche, jamais par-dessus */}
-        <div className="relative mx-auto w-full max-w-4xl px-6 pb-12 pt-8 text-center sm:pb-16 sm:pt-10">
+        <div className="relative mx-auto w-full max-w-4xl px-6 pb-9 pt-5 text-center sm:pb-12 sm:pt-7">
           <div className="pointer-events-none absolute inset-0 opacity-70"><SoundWaves waves={4} density={0.7} /></div>
           <div className="relative">
             <Reveal y={14}>
