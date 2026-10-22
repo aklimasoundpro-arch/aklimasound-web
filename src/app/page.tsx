@@ -30,39 +30,40 @@ export default function Home() {
       <BookingModal open={bookOpen} onClose={() => setBookOpen(false)} />
 
       {/* ============ HERO ============ */}
-      <section className="relative flex min-h-[94vh] items-center overflow-hidden pt-24">
-        <div className="absolute inset-0 bg-motif-strong" />
-        <SoundWaves waves={6} density={1.15} />
-        <div className="relative mx-auto w-full max-w-5xl px-6 py-16 text-center">
+      <section className="relative flex min-h-[100svh] items-end overflow-hidden">
+        {/* Affiche AKS noir & blanc : remplit tout l'espace (PC + mobile), zoom lent */}
+        <div className="absolute inset-0">
+          <Image
+            src="/img/affiche-aks-bw.png"
+            alt="Aklimasound — La passion du son : sonorisation, mixage, régie événementielle, installation fixe, écoute experte"
+            fill
+            priority
+            sizes="100vw"
+            className="kenburns object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/55 to-ink/15" />
+          <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-ink via-ink/85 to-transparent" />
+        </div>
+        <SoundWaves waves={4} density={0.7} />
+        <div className="relative mx-auto w-full max-w-5xl px-6 pb-14 pt-[62vh] text-center sm:pb-20 sm:pt-[56vh]">
           <Reveal y={14}>
-            <p className="chip mb-8">{t("hero_kicker")}</p>
+            <p className="chip mb-6">{t("hero_kicker")}</p>
           </Reveal>
-          <Reveal y={10}>
-            <Image
-              src="/img/logo-aks-white.png"
-              alt="Aklimasound — la passion du son"
-              width={1254}
-              height={1254}
-              priority
-              loading="eager"
-              className="logo-breathe mx-auto h-44 w-44 object-contain sm:h-60 sm:w-60"
-            />
-            <h1 className="sr-only">Aklimasound — Sonorisation professionnelle, vente & installation de matériel audio au Togo</h1>
-          </Reveal>
-          <Reveal delay={0.35}>
-            <p className="mx-auto mt-6 max-w-3xl font-display text-xl font-semibold text-ivory sm:text-2xl">
+          <h1 className="sr-only">Aklimasound — Sonorisation professionnelle, vente & installation de matériel audio au Togo</h1>
+          <Reveal delay={0.2}>
+            <p className="mx-auto max-w-3xl font-display text-xl font-semibold text-ivory sm:text-2xl">
               <BlurText text={t("hero_sub")} delay={70} />
             </p>
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-ivory/65 sm:text-base">{t("hero_desc")}</p>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-ivory/70 sm:text-base">{t("hero_desc")}</p>
           </Reveal>
-          <Reveal delay={0.55}>
+          <Reveal delay={0.45}>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <button onClick={() => openQuote()} className="btn btn-gold"><Icon name="calendar" className="h-4 w-4" /> {t("cta_book")}</button>
               <Link href="/galerie" className="btn btn-outline"><Icon name="headphones" className="h-4 w-4" /> {t("cta_beats")} <span className="chip !py-0 !text-[9px]">Bientôt</span></Link>
               <Link href="/materiel" className="btn btn-outline"><Icon name="package" className="h-4 w-4" /> {t("cta_shop")}</Link>
             </div>
           </Reveal>
-          <Reveal delay={0.75}>
+          <Reveal delay={0.65}>
             <div className="mx-auto mt-12 grid max-w-xl grid-cols-3 gap-6">
               {[{ n: 30, s: "", l: lang === "fr" ? "formules calibrées" : "calibrated packages" }, { n: 10, s: "", l: lang === "fr" ? "domaines couverts" : "fields covered" }, { n: 100, s: "%", l: lang === "fr" ? "ponctualité" : "punctuality" }].map((k, i) => (
                 <div key={i}>
@@ -175,7 +176,7 @@ export default function Home() {
           {/* Affiche officielle encadrée */}
           <Reveal delay={0.1}>
             <div className="mt-14 flex flex-col items-center gap-8 md:flex-row md:justify-center">
-              <div className="w-full max-w-sm -rotate-1 rounded-2xl border border-gold/30 bg-ink p-3 shadow-[0_30px_80px_-30px_rgba(233,200,126,.35)] transition hover:rotate-0">
+              <div className="w-full max-w-sm -rotate-1 rounded-2xl border border-gold/30 bg-ink p-3 shadow-[0_30px_80px_-30px_rgba(255,255,255,.35)] transition hover:rotate-0">
                 <Image src="/img/affiche-sono-1.jpg" width={1080} height={1080} alt={lang === "fr" ? "Affiche Aklimasound — sonorisation professionnelle" : "Aklimasound poster — professional sound"} className="rounded-xl" loading="lazy" />
               </div>
               <div className="max-w-md text-center md:text-left">

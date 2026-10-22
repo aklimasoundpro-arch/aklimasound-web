@@ -39,8 +39,8 @@ export default function SoundWaves({ className = "", density = 1, waves = 3 }: {
         r.y += r.sp;
         if (r.y - r.len > h) { r.y = -r.len; r.x = Math.random() * w; }
         const g = ctx.createLinearGradient(r.x, r.y - r.len, r.x, r.y);
-        g.addColorStop(0, "rgba(233,200,126,0)");
-        g.addColorStop(1, `rgba(233,200,126,${r.op})`);
+        g.addColorStop(0, "rgba(255,255,255,0)");
+        g.addColorStop(1, `rgba(255,255,255,${r.op})`);
         ctx.strokeStyle = g;
         ctx.lineWidth = 1.1;
         ctx.beginPath();
@@ -50,7 +50,7 @@ export default function SoundWaves({ className = "", density = 1, waves = 3 }: {
       }
 
       // N ondes sonores superposées, amplitudes et vitesses variées
-      const palette = ["233,200,126", "196,118,59", "245,240,230"];
+      const palette = ["255,255,255", "161,161,170", "245,240,230"];
       for (let i = 0; i < waves; i++) {
         const p = waves === 1 ? 0.5 : i / (waves - 1);
         const amp = h * (0.028 + 0.05 * Math.sin(p * Math.PI) + 0.012 * i);

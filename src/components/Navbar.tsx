@@ -42,7 +42,7 @@ export default function Navbar({ onQuote }: { onQuote: () => void }) {
             alt="Aklimasound — la passion du son"
             width={1254}
             height={1254}
-            className="h-12 w-12 object-contain transition group-hover:drop-shadow-[0_0_12px_rgba(233,200,126,.55)]"
+            className="h-12 w-12 object-contain transition group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,.55)]"
             priority
           />
         </Link>

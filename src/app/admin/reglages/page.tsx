@@ -47,7 +47,7 @@ export default function Reglages() {
             Pourcentage appliqué automatiquement aux visiteurs connectés (prix barré sur les offres). 0 = désactivée.
           </p>
           <div className="flex items-center gap-4">
-            <input type="range" min={0} max={30} step={1} value={discount} onChange={(e) => setDiscount(Number(e.target.value))} className="flex-1 accent-[#e9c87e]" />
+            <input type="range" min={0} max={30} step={1} value={discount} onChange={(e) => setDiscount(Number(e.target.value))} className="flex-1 accent-[#f4f4f5]" />
             <span className="font-display w-16 text-right text-2xl font-bold text-gold">{discount} %</span>
           </div>
           <button onClick={saveDiscount} className="btn btn-gold mt-4 !py-2 text-xs"><Icon name="check" className="h-3.5 w-3.5" /> Enregistrer</button>

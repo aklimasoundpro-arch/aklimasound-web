@@ -70,11 +70,11 @@ export function CookieBanner() {
               <div className="mt-3 space-y-2">
                 <label className="flex items-center justify-between gap-3 rounded-xl border border-ivory/10 bg-white/[0.03] px-3 py-2 text-xs">
                   <span className="text-ivory/75">{fr ? "Mesure d'audience anonyme (recommandé)" : "Anonymous audience measurement (recommended)"}</span>
-                  <input type="checkbox" checked={analytics} onChange={(e) => setAnalytics(e.target.checked)} className="h-4 w-4 accent-[#e9c87e]" />
+                  <input type="checkbox" checked={analytics} onChange={(e) => setAnalytics(e.target.checked)} className="h-4 w-4 accent-[#f4f4f5]" />
                 </label>
                 <label className="flex items-center justify-between gap-3 rounded-xl border border-ivory/10 bg-white/[0.03] px-3 py-2 text-xs">
                   <span className="text-ivory/75">{fr ? "Publicité Meta (Facebook / Instagram)" : "Meta advertising (Facebook / Instagram)"}</span>
-                  <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} className="h-4 w-4 accent-[#e9c87e]" />
+                  <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} className="h-4 w-4 accent-[#f4f4f5]" />
                 </label>
               </div>
             )}

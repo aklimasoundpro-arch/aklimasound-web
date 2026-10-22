@@ -93,10 +93,10 @@ export default function Devis() {
                 </div>
                 <div>
                   <label className="text-sm text-ivory/70">{lang === "fr" ? "Nombre de personnes estimées" : "Estimated number of guests"} : <b className="text-gold">{guests}</b></label>
-                  <input type="range" min={30} max={2500} step={10} value={guests} onChange={(e) => setGuests(Number(e.target.value))} className="mt-2 w-full accent-[#e9c87e]" />
+                  <input type="range" min={30} max={2500} step={10} value={guests} onChange={(e) => setGuests(Number(e.target.value))} className="mt-2 w-full accent-[#f4f4f5]" />
                 </div>
                 <label className="flex items-center gap-3 text-sm text-ivory/75">
-                  <input type="checkbox" checked={outdoor} onChange={(e) => setOutdoor(e.target.checked)} className="h-4 w-4 accent-[#e9c87e]" />
+                  <input type="checkbox" checked={outdoor} onChange={(e) => setOutdoor(e.target.checked)} className="h-4 w-4 accent-[#f4f4f5]" />
                   {lang === "fr" ? "Événement en plein air" : "Open-air event"}
                 </label>
                 <div className="flex justify-between pt-2">
@@ -110,7 +110,7 @@ export default function Devis() {
                 {OPTIONS.map((o) => (
                   <label key={o.id} className="glass flex cursor-pointer items-center justify-between rounded-2xl p-4">
                     <span className="flex items-center gap-3 text-sm">
-                      <input type="checkbox" checked={opts.includes(o.id)} className="h-4 w-4 accent-[#e9c87e]"
+                      <input type="checkbox" checked={opts.includes(o.id)} className="h-4 w-4 accent-[#f4f4f5]"
                         onChange={(e) => setOpts(e.target.checked ? [...opts, o.id] : opts.filter((x) => x !== o.id))} />
                       {L(o.label, lang)}
                     </span>

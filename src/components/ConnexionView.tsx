@@ -191,7 +191,7 @@ export default function ConnexionView() {
 
           {mode === "signup" && (
             <label className="flex cursor-pointer items-start gap-3 text-xs leading-relaxed text-ivory/65">
-              <input type="checkbox" name="newsletter" className="mt-0.5 h-4 w-4 accent-[#E9C87E]" />
+              <input type="checkbox" name="newsletter" className="mt-0.5 h-4 w-4 accent-[#f4f4f5]" />
               <span>
                 {fr
                   ? "Je souhaite recevoir les actualités et offres Aklimasound par e-mail (désinscription en un clic à tout moment)."

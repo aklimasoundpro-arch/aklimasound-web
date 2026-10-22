@@ -43,7 +43,7 @@ export function Funnel({ data }: { data: { label: string; value: number }[] }) {
         const pct = Math.round((d.value / max) * 100);
         return (
           <div key={d.label} className="funnel-layer relative mx-auto flex items-center justify-between rounded-xl px-4 py-2.5 text-xs"
-            style={{ width: `${w}%`, background: `color-mix(in oklab, var(--color-gold) ${18 + i * 6}%, transparent)`, border: "1px solid rgba(233,200,126,.25)", animationDelay: `${i * 0.12}s` }}>
+            style={{ width: `${w}%`, background: `color-mix(in oklab, var(--color-gold) ${18 + i * 6}%, transparent)`, border: "1px solid rgba(255,255,255,.25)", animationDelay: `${i * 0.12}s` }}>
             <span className="font-semibold text-ivory">{d.label}</span>
             <span className="text-ivory/80">{d.value.toLocaleString("fr-FR")} · {pct}%</span>
           </div>
