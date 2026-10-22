@@ -29,51 +29,69 @@ export default function Home() {
       <QuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} preset={quotePreset} />
       <BookingModal open={bookOpen} onClose={() => setBookOpen(false)} />
 
-      {/* ============ HERO ============ */}
-      <section className="relative flex min-h-[100svh] items-end overflow-hidden">
-        {/* Affiche AKS noir & blanc : remplit tout l'espace (PC + mobile), zoom lent */}
-        <div className="absolute inset-0">
-          <Image
-            src="/img/affiche-aks-bw.png"
-            alt="Aklimasound — La passion du son : sonorisation, mixage, régie événementielle, installation fixe, écoute experte"
-            fill
-            priority
-            sizes="100vw"
-            className="kenburns object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/55 to-ink/15" />
-          <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-ink via-ink/85 to-transparent" />
-        </div>
-        <SoundWaves waves={4} density={0.7} />
-        <div className="relative mx-auto w-full max-w-5xl px-6 pb-14 pt-[62vh] text-center sm:pb-20 sm:pt-[56vh]">
-          <Reveal y={14}>
-            <p className="chip mb-6">{t("hero_kicker")}</p>
-          </Reveal>
-          <h1 className="sr-only">Aklimasound — Sonorisation professionnelle, vente & installation de matériel audio au Togo</h1>
-          <Reveal delay={0.2}>
-            <p className="mx-auto max-w-3xl font-display text-xl font-semibold text-ivory sm:text-2xl">
-              <BlurText text={t("hero_sub")} delay={70} />
-            </p>
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-ivory/70 sm:text-base">{t("hero_desc")}</p>
-          </Reveal>
-          <Reveal delay={0.45}>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <button onClick={() => openQuote()} className="btn btn-gold"><Icon name="calendar" className="h-4 w-4" /> {t("cta_book")}</button>
-              <Link href="/galerie" className="btn btn-outline"><Icon name="headphones" className="h-4 w-4" /> {t("cta_beats")} <span className="chip !py-0 !text-[9px]">Bientôt</span></Link>
-              <Link href="/materiel" className="btn btn-outline"><Icon name="package" className="h-4 w-4" /> {t("cta_shop")}</Link>
-            </div>
-          </Reveal>
-          <Reveal delay={0.65}>
-            <div className="mx-auto mt-12 grid max-w-xl grid-cols-3 gap-6">
-              {[{ n: 30, s: "", l: lang === "fr" ? "formules calibrées" : "calibrated packages" }, { n: 10, s: "", l: lang === "fr" ? "domaines couverts" : "fields covered" }, { n: 100, s: "%", l: lang === "fr" ? "ponctualité" : "punctuality" }].map((k, i) => (
-                <div key={i}>
-                  <p className="font-display text-3xl font-bold text-gold"><CountUp to={k.n} suffix={k.s} /></p>
-                  <p className="text-xs uppercase tracking-widest text-ivory/50">{k.l}</p>
-                </div>
+      {/* ============ HERO : AFFICHE AKS RECOMPOSÉE — chaque élément extrait, visible sur tout écran ============ */}
+      <section className="relative overflow-hidden bg-black">
+        <div className="mx-auto w-full max-w-[1400px]">
+          {/* Lignes de vagues — haut de l'affiche */}
+          <Image src="/img/poster/waves.png" alt="" width={1254} height={144} priority sizes="(max-width:1400px) 100vw, 1400px" className="block h-auto w-full" />
+          {/* Colonnes exactes de l'affiche : enceinte | logo AKS | micro */}
+          <div className="flex items-start">
+            <Image src="/img/poster/speaker.png" alt="Enceinte de sonorisation professionnelle" width={190} height={624} priority sizes="(max-width:1400px) 15vw, 212px" className="block h-auto w-[15.15%]" />
+            <div className="w-[2.55%]" aria-hidden="true" />
+            <Image src="/img/poster/logo.png" alt="AKS — Aklimasound, la passion du son" width={819} height={622} priority sizes="(max-width:1400px) 65vw, 914px" className="block h-auto w-[65.31%]" />
+            <Image src="/img/poster/mic.png" alt="Microphone de studio" width={213} height={644} priority sizes="(max-width:1400px) 17vw, 238px" className="block h-auto w-[16.99%]" />
+          </div>
+          {/* Rangée des 5 métiers : bande fidèle de l'affiche sur grand écran… */}
+          <Reveal delay={0.25}>
+            <Image src="/img/poster/services-strip.png" alt="Nos 5 métiers : sonorisation, mixage, régie événementielle, installation et optimisation audio, écoute expertise" width={1254} height={156} sizes="(max-width:1400px) 100vw, 1400px" className="hidden h-auto w-full lg:block" />
+            {/* …tuiles agrandies et lisibles sur mobile et tablette */}
+            <div className="flex flex-wrap items-start justify-center gap-x-6 gap-y-5 px-6 py-7 lg:hidden">
+              {([["svc-1", "Sonorisation"], ["svc-2", "Mixage"], ["svc-3", "Régie événementielle"], ["svc-4", "Installation & optimisation audio"], ["svc-5", "Écoute expertise"]] as const).map(([sl, slabel]) => (
+                <Image key={sl} src={`/img/poster/${sl}.png`} alt={slabel} width={220} height={151} sizes="(max-width:640px) 40vw, 25vw" className="block h-auto w-36 sm:w-44" />
               ))}
             </div>
           </Reveal>
         </div>
+        {/* Informations textuelles du site : sous le dernier texte de l'affiche, jamais par-dessus */}
+        <div className="relative mx-auto w-full max-w-4xl px-6 pb-12 pt-8 text-center sm:pb-16 sm:pt-10">
+          <div className="pointer-events-none absolute inset-0 opacity-70"><SoundWaves waves={4} density={0.7} /></div>
+          <div className="relative">
+            <Reveal y={14}>
+              <p className="chip mb-6">{t("hero_kicker")}</p>
+            </Reveal>
+            <h1 className="sr-only">Aklimasound — Sonorisation professionnelle, vente & installation de matériel audio au Togo</h1>
+            <Reveal delay={0.2}>
+              <p className="mx-auto max-w-3xl font-display text-xl font-semibold text-ivory sm:text-2xl">
+                <BlurText text={t("hero_sub")} delay={70} />
+              </p>
+              <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-ivory/70 sm:text-base">{t("hero_desc")}</p>
+            </Reveal>
+            <Reveal delay={0.45}>
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
+                <button onClick={() => openQuote()} className="btn btn-gold"><Icon name="calendar" className="h-4 w-4" /> {t("cta_book")}</button>
+                <Link href="/galerie" className="btn btn-outline"><Icon name="headphones" className="h-4 w-4" /> {t("cta_beats")} <span className="chip !py-0 !text-[9px]">Bientôt</span></Link>
+                <Link href="/materiel" className="btn btn-outline"><Icon name="package" className="h-4 w-4" /> {t("cta_shop")}</Link>
+              </div>
+            </Reveal>
+            <Reveal delay={0.65}>
+              <div className="mx-auto mt-12 grid max-w-xl grid-cols-3 gap-6">
+                {[{ n: 30, s: "", l: lang === "fr" ? "formules calibrées" : "calibrated packages" }, { n: 10, s: "", l: lang === "fr" ? "domaines couverts" : "fields covered" }, { n: 100, s: "%", l: lang === "fr" ? "ponctualité" : "punctuality" }].map((k, i) => (
+                  <div key={i}>
+                    <p className="font-display text-3xl font-bold text-gold"><CountUp to={k.n} suffix={k.s} /></p>
+                    <p className="text-xs uppercase tracking-widest text-ivory/50">{k.l}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </div>
+        {/* Console de mixage — bas de l'affiche, pleine largeur sur tout écran */}
+        <Reveal delay={0.3}>
+          <div className="relative">
+            <Image src="/img/poster/console.png" alt="Console de mixage professionnelle en régie" width={1254} height={310} sizes="100vw" className="block h-auto w-full" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-b from-transparent to-ink" aria-hidden="true" />
+          </div>
+        </Reveal>
       </section>
 
       <TrustStrip />
