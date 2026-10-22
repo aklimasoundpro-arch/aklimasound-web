@@ -7,7 +7,7 @@
 import { randomUUID } from "crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { MEMBER_COOKIE, notify, patchRow, rateOk, verifyMemberToken } from "@/lib/db";
+import { MEMBER_COOKIE, notify, patchRow, rateOkDb, verifyMemberToken } from "@/lib/db";
 import { supa, supaReady } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     const tok = req.headers.get("x-aks-member") || (await cookies()).get(MEMBER_COOKIE)?.value || undefined;
     const userId = await verifyMemberToken(tok);
     if (!userId) return NextResponse.json({ ok: false, code: "no_session" }, { status: 401 });
-    if (!rateOk(`upload:${userId}`, 10, 3_600_000)) {
+    if (!await rateOkDb(`upload:${userId}`, 10, 3_600_000)) {
       return NextResponse.json({ ok: false, code: "rate_limited" }, { status: 429 });
     }
 

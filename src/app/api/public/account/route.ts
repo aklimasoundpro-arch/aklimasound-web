@@ -7,7 +7,7 @@
  */
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { getSettings, ipOf, makeMemberToken, MEMBER_COOKIE, rateOk, verifyMemberToken } from "@/lib/db";
+import { getSettings, ipOf, makeMemberToken, MEMBER_COOKIE, rateOkDb, verifyMemberToken } from "@/lib/db";
 import { authApiKey, supa, supaReady, supaUrl } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
   try {
     /* ---------- Création de compte ---------- */
     if (action === "signup") {
-      if (!rateOk(`signup:${ip}`, 5, 3_600_000)) return limited();
+      if (!await rateOkDb(`signup:${ip}`, 5, 3_600_000)) return limited();
       const firstName = str(b.firstName, 40);
       const lastName = str(b.lastName, 40);
       const email = str(b.email, 120).toLowerCase();
@@ -137,7 +137,7 @@ export async function POST(req: Request) {
 
     /* ---------- Renvoi de l'e-mail de confirmation ---------- */
     if (action === "resend") {
-      if (!rateOk(`resend:${ip}`, 3, 3_600_000)) return limited();
+      if (!await rateOkDb(`resend:${ip}`, 3, 3_600_000)) return limited();
       const email = str(b.email, 120).toLowerCase();
       if (!EMAIL_RE.test(email)) return bad("email");
       await gotrue("resend", { email, type: "signup" });
@@ -146,7 +146,7 @@ export async function POST(req: Request) {
 
     /* ---------- Connexion ---------- */
     if (action === "login") {
-      if (!rateOk(`mlogin:${ip}`, 10, 120_000)) return limited();
+      if (!await rateOkDb(`mlogin:${ip}`, 10, 120_000)) return limited();
       const email = str(b.email, 120).toLowerCase();
       const password = String(b.password ?? "").slice(0, 128);
       if (!EMAIL_RE.test(email) || !password) return bad("credentials");
@@ -183,7 +183,7 @@ export async function POST(req: Request) {
 
     /* ---------- Mot de passe oublié (toujours ok → pas d'énumération) ---------- */
     if (action === "forgot") {
-      if (!rateOk(`forgot:${ip}`, 3, 3_600_000)) return limited();
+      if (!await rateOkDb(`forgot:${ip}`, 3, 3_600_000)) return limited();
       const email = str(b.email, 120).toLowerCase();
       if (!EMAIL_RE.test(email)) return bad("email");
       await gotrue(`recover?redirect_to=${encodeURIComponent(`${siteUrl(req)}/connexion`)}`, { email });
@@ -192,7 +192,7 @@ export async function POST(req: Request) {
 
     /* ---------- Réinitialisation (lien reçu par e-mail) ---------- */
     if (action === "reset") {
-      if (!rateOk(`reset:${ip}`, 5, 3_600_000)) return limited();
+      if (!await rateOkDb(`reset:${ip}`, 5, 3_600_000)) return limited();
       const tokenHash = str(b.tokenHash, 2000);
       const password = String(b.password ?? "");
       if (!tokenHash) return bad("token");

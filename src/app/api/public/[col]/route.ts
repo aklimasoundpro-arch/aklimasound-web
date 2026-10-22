@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { addRow, ipOf, MEMBER_COOKIE, notify, rateOk, verifyMemberToken } from "@/lib/db";
+import { addRow, ipOf, MEMBER_COOKIE, notify, rateOkDb, verifyMemberToken } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +41,7 @@ async function memberOf(req: Request): Promise<string | null> {
 export async function POST(req: Request, ctx: { params: Promise<{ col: string }> }) {
   const { col } = await ctx.params;
   const ip = ipOf(req);
-  if (!rateOk(`pub:${col}:${ip}`, 6, 60_000)) {
+  if (!await rateOkDb(`pub:${col}:${ip}`, 6, 60_000)) {
     return NextResponse.json({ ok: false, error: "Trop de demandes. Réessayez dans une minute." }, { status: 429 });
   }
   const { tooBig, body: b } = await readBody(req, 100_000);

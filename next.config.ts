@@ -31,6 +31,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   // Autorise l'aperçu live proxifié (sandbox) à charger le site + HMR en dev
   allowedDevOrigins: [
     "3000-iacurtst3hhnr82g5v94d.e2b.app",

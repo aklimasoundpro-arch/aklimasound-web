@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { COOKIE, ipOf, makeToken, rateOk, rateReset, setPassword, verifyPass, verifyToken } from "@/lib/db";
+import { COOKIE, ipOf, makeToken, rateOkDb, rateReset, setPassword, verifyPass, verifyToken } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
   try {
     if (action === "login") {
-      if (!rateOk(`login:${ip}`, 10, 120_000)) {
+      if (!await rateOkDb(`login:${ip}`, 10, 120_000)) {
         return NextResponse.json({ ok: false, error: "Trop de tentatives. Réessayez dans 2 minutes." }, { status: 429 });
       }
       if (!(await verifyPass(String(body.password ?? "")))) {

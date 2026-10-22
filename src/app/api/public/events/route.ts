@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addRow, ipOf, rateOk } from "@/lib/db";
+import { addRow, ipOf, rateOkDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +15,7 @@ const str = (v: unknown, max: number) =>
  */
 export async function POST(req: Request) {
   const ip = ipOf(req);
-  if (!rateOk(`ev:${ip}`, 120, 60_000)) return NextResponse.json({ ok: false }, { status: 429 });
+  if (!await rateOkDb(`ev:${ip}`, 120, 60_000)) return NextResponse.json({ ok: false }, { status: 429 });
   // Anti-DoS : taille réelle du corps (insensible à Transfer-Encoding: chunked sans Content-Length)
   const raw = await req.text().catch(() => "");
   if (raw.length > 20_000) return NextResponse.json({ ok: false }, { status: 413 });

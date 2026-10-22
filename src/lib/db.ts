@@ -352,6 +352,33 @@ export function rateOk(key: string, max = 6, windowMs = 60_000): boolean {
 }
 
 /**
+ * Limitation de débit PARTAGÉE : compteur stocké dans Supabase (table rate_limits),
+ * donc commun à tous les isolats serverless Netlify — contrairement à la mémoire
+ * locale qui se vidait à chaque isolate. Repli mémoire si Supabase injoignable.
+ */
+export async function rateOkDb(key: string, max = 6, windowMs = 60_000): Promise<boolean> {
+  const s = supa();
+  if (!s) return rateOk(key, max, windowMs);
+  try {
+    const now = Date.now();
+    const { data } = await s.from("rate_limits").select("n,t").eq("key", key).maybeSingle();
+    const row = data as { n: number; t: string } | null;
+    if (!row || now - new Date(row.t).getTime() > windowMs) {
+      await s.from("rate_limits").upsert({ key, n: 1, t: new Date(now).toISOString() });
+      if (Math.random() < 0.05) {
+        await s.from("rate_limits").delete().lt("t", new Date(now - 3_600_000).toISOString());
+      }
+      return true;
+    }
+    const n = row.n + 1;
+    await s.from("rate_limits").update({ n }).eq("key", key);
+    return n <= max;
+  } catch {
+    return rateOk(key, max, windowMs);
+  }
+}
+
+/**
  * IP client fiable : la DERNIÈRE valeur de X-Forwarded-For est celle ajoutée par le
  * proxy le plus proche (edge Netlify). Les valeurs précédentes sont contrôlables par
  * le client → les ignorer empêche le contournement des quotas par rotation d'IP forgées.
