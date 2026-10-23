@@ -243,7 +243,7 @@ export default function ConnexionView() {
 
         <div className="mt-5 rounded-2xl border border-gold/30 bg-gold/10 p-4 text-center text-xs leading-relaxed text-ivory/70">
           {fr
-            ? "Compte gratuit : prix membre réduits automatiquement, suivi de vos devis et réservations, dépôt de votre preuve d'acompte en ligne. Aucune donnée bancaire demandée."
+            ? "Compte gratuit : prix membre réduits automatiquement, suivi de vos devis et réservations en ligne."
             : "Free account: automatic member discounts, tracking of your quotes and bookings, online deposit proof upload. No banking data requested."}
         </div>
       </div>

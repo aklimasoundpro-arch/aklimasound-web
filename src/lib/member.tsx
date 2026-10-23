@@ -33,6 +33,7 @@ type MemberCtx = {
   discount: number;
   call: (payload: Record<string, unknown>) => Promise<ApiResult>;
   refresh: () => Promise<void>;
+  signOut: () => Promise<void>;
   setTokenLocal: (t: string | null) => void;
   getToken: () => string | null;
 };
@@ -44,6 +45,7 @@ const Ctx = createContext<MemberCtx>({
   discount: 0,
   call: async () => ({ ok: false, code: "no_provider" }),
   refresh: async () => {},
+  signOut: async () => {},
   setTokenLocal: () => {},
   getToken: () => null,
 });
@@ -107,8 +109,15 @@ export function MemberProvider({ children }: { children: ReactNode }) {
 
   const getToken = useCallback(() => tokRef.current || store.get(TOK_KEY), []);
 
+  const signOut = useCallback(async () => {
+    try { await call({ action: "logout" }); } catch { /* réseau */ }
+    setProfile(null);
+    setDiscount(0);
+    setTokenLocal(null);
+  }, [call, setTokenLocal]);
+
   return (
-    <Ctx.Provider value={{ ready, connected: !!profile, profile, discount, call, refresh, setTokenLocal, getToken }}>
+    <Ctx.Provider value={{ ready, connected: !!profile, profile, discount, call, refresh, signOut, setTokenLocal, getToken }}>
       {children}
     </Ctx.Provider>
   );

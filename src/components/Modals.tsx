@@ -131,40 +131,33 @@ export function QuoteModal({ open, onClose, preset, wa }: { open: boolean; onClo
   );
 }
 
-/** Réservation : acompte manuel Mobile Money (phase 1, sans PSP) */
+/** Réservation : demande simple — confirmation après échange, aucun paiement en ligne. */
 export function BookingModal({ open, onClose, offer }: { open: boolean; onClose: () => void; offer?: { name: string; price: number | null } }) {
   const { lang } = useI18n();
   const { send } = useWa();
-  const [declare, setDeclare] = useState(false);
-  const [declared, setDeclared] = useState<string | null>(null);
+  const [sent, setSent] = useState<string | null>(null);
   useEffect(() => { if (open) track("booking_modal_open", { label: offer?.name || "" }); }, [open, offer?.name]);
-  const dep30 = offer?.price ? Math.round((offer.price * 0.3) / 500) * 500 : null;
-  const dep50 = offer?.price ? Math.round((offer.price * 0.5) / 500) * 500 : null;
 
-  const declareProof = (e: FormEvent<HTMLFormElement>) => {
+  const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    if (String(fd.get("website"))) return;
+    if (String(fd.get("website"))) return; // honeypot anti-robots
     const name = String(fd.get("name") || "").trim();
     const phone = String(fd.get("phone") || "").trim();
-    const proofRef = String(fd.get("proofRef") || "").trim();
-    if (name.length < 2 || !/^\+[0-9 ().-]{8,20}$/.test(phone) || proofRef.length < 3) {
-      return setDeclared(lang === "fr" ? "err" : "err");
-    }
+    if (name.length < 2 || !/^\+[0-9 ().-]{8,20}$/.test(phone)) return setSent("err");
     api.pub("bookings", {
       customer: name, phone, offer: offer?.name ?? "", total: offer?.price ?? 0,
-      depositRate: Number(fd.get("depositRate") || 30), proofRef,
+      depositRate: 0, proofRef: "",
       date: String(fd.get("date") || ""), place: String(fd.get("place") || ""), channel: "site",
     });
     store.set("aks_lead", JSON.stringify({ name, phone, email: String(fd.get("email") || "") }));
-    setDeclared("ok");
-    track("deposit_declared", { label: offer?.name || "" });
-    fbqEvent("InitiateCheckout");
+    setSent("ok");
+    track("booking_request", { label: offer?.name || "" });
   };
 
   return (
     <Shell open={open} onClose={onClose}>
-      <h3 className="font-display text-2xl font-bold">{lang === "fr" ? "Réservation & acompte" : "Booking & deposit"}</h3>
+      <h3 className="font-display text-2xl font-bold">{lang === "fr" ? "Réservation" : "Booking"}</h3>
       {offer && (
         <p className="mt-2 text-sm text-ivory/70">
           {offer.name} — <span className="text-gold font-semibold">{offer.price ? fcfa(offer.price) : (lang === "fr" ? "sur devis" : "on quote")}</span>
@@ -172,69 +165,32 @@ export function BookingModal({ open, onClose, offer }: { open: boolean; onClose:
       )}
       <ol className="mt-5 space-y-3 text-sm text-ivory/75">
         <li className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/15 text-xs font-bold text-gold">1</span>
-          {lang === "fr" ? "Choisissez votre acompte : 30 % ou 50 % du montant total." : "Choose your deposit: 30% or 50% of the total amount."}
-        </li>
+          {lang === "fr" ? "Décrivez votre événement ci-dessous : la demande part directement dans notre espace de gestion." : "Describe your event below: the request goes straight to our management space."}</li>
         <li className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/15 text-xs font-bold text-gold">2</span>
-          {lang === "fr"
-            ? <>Envoyez l'acompte par Mobile Money : <b className="text-ivory">Mixx by Yas (ex-TMoney)</b> ou <b className="text-ivory">Flooz (Moov)</b> au {CONTACT.wa1Display}.</>
-            : <>Send the deposit via Mobile Money: <b className="text-ivory">Mixx by Yas (ex-TMoney)</b> or <b className="text-ivory">Flooz (Moov)</b> to {CONTACT.wa1Display}.</>}
-        </li>
+          {lang === "fr" ? "Nous vérifions la disponibilité de la date et revenons vers vous pour convenir ensemble des modalités." : "We check the date availability and get back to you to agree on the arrangements together."}</li>
         <li className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/15 text-xs font-bold text-gold">3</span>
-          {lang === "fr" ? "Envoyez la preuve via WhatsApp : nous confirmons votre réservation et bloquons la date immédiatement." : "Send the proof via WhatsApp: we confirm your booking and lock the date immediately."}
-        </li>
+          {lang === "fr" ? "Votre date est bloquée dès confirmation conjointe." : "Your date is locked as soon as both parties confirm."}</li>
       </ol>
-      {dep30 && dep50 && (
-        <div className="mt-4 grid grid-cols-2 gap-3 text-center">
-          <div className="rounded-2xl border border-ivory/10 bg-white/5 p-3">
-            <p className="text-xs uppercase tracking-widest text-ivory/50">{lang === "fr" ? "Acompte 30 %" : "30% deposit"}</p>
-            <p className="font-display text-lg font-bold text-gold">{fcfa(dep30)}</p>
+      {sent === "ok" ? (
+        <p className="mt-4 rounded-2xl border border-[#3ecf8e]/30 bg-[#3ecf8e]/10 p-3 text-center text-sm text-[#3ecf8e]">
+          {lang === "fr" ? "✓ Demande envoyée ! Notre équipe vous contacte très vite pour confirmer votre date." : "✓ Request sent! Our team will contact you shortly to confirm your date."}
+        </p>
+      ) : (
+        <form onSubmit={submit} className="mt-4 space-y-2.5">
+          <input className="input !py-2 text-sm" name="name" maxLength={80} placeholder={lang === "fr" ? "Nom / organisation *" : "Name / organization *"} />
+          <PhoneInput compact />
+          <input className="input !py-2 text-sm" name="email" type="email" maxLength={120} placeholder={lang === "fr" ? "E-mail (optionnel)" : "Email (optional)"} />
+          <div className="grid grid-cols-2 gap-2.5">
+            <input className="input !py-2 text-sm" name="date" type="date" aria-label={lang === "fr" ? "Date souhaitée" : "Desired date"} />
+            <input className="input !py-2 text-sm" name="place" maxLength={80} placeholder={lang === "fr" ? "Lieu" : "Location"} />
           </div>
-          <div className="rounded-2xl border border-gold/40 bg-gold/10 p-3">
-            <p className="text-xs uppercase tracking-widest text-gold/80">{lang === "fr" ? "Acompte 50 %" : "50% deposit"}</p>
-            <p className="font-display text-lg font-bold text-gold">{fcfa(dep50)}</p>
-          </div>
-        </div>
+          <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden />
+          {sent === "err" && <p className="text-xs text-live">{lang === "fr" ? "Nom (2 car. min.) et téléphone international valide requis." : "Name (min 2 chars) and valid international phone required."}</p>}
+          <button className="btn btn-gold w-full !py-2.5 text-sm"><Icon name="zap" className="h-4 w-4" /> {lang === "fr" ? "Envoyer ma demande" : "Send my request"}</button>
+        </form>
       )}
-      <button onClick={() => send(`Bonjour Aklimasound, je souhaite réserver l'offre ${offer?.name ?? ""} et verser l'acompte.`)} className="btn btn-wa mt-5 w-full">
-        <Icon name="chat" className="h-4 w-4" /> {lang === "fr" ? "Confirmer sur WhatsApp" : "Confirm on WhatsApp"}</button>
-
-      {/* Déclaration de preuve d'acompte → enregistrée dans l'admin (à valider) */}
-      <div className="mt-4 border-t border-ivory/10 pt-4">
-        {declared === "ok" ? (
-          <p className="rounded-2xl border border-[#3ecf8e]/30 bg-[#3ecf8e]/10 p-3 text-center text-sm text-[#3ecf8e]">
-            {lang === "fr" ? "✓ Acompte déclaré ! Notre équipe le vérifie et confirme votre réservation (date bloquée) sous 2 h ouvrées." : "✓ Deposit declared! Our team verifies and confirms your booking within 2 business hours."}
-          </p>
-        ) : declare ? (
-          <form onSubmit={declareProof} className="space-y-2.5">
-            <p className="text-xs text-ivory/60">{lang === "fr" ? "Vous avez déjà envoyé l'acompte ? Déclarez-le ici : la demande part directement dans notre espace de gestion pour validation." : "Already sent the deposit? Declare it here: it goes straight to our management space for validation."}</p>
-            <input className="input !py-2 text-sm" name="name" maxLength={80} placeholder={lang === "fr" ? "Nom / organisation *" : "Name / organization *"} />
-            <PhoneInput compact />
-            <input className="input !py-2 text-sm" name="email" type="email" maxLength={120} placeholder={lang === "fr" ? "E-mail (optionnel)" : "Email (optional)"} />
-            <div className="grid grid-cols-2 gap-2.5">
-              <select className="input !py-2 text-sm" name="depositRate" defaultValue={30}>
-                <option className="bg-ink" value={30}>{lang === "fr" ? "Acompte 30 %" : "30% deposit"}</option>
-                <option className="bg-ink" value={50}>{lang === "fr" ? "Acompte 50 %" : "50% deposit"}</option>
-              </select>
-              <input className="input !py-2 text-sm" name="proofRef" maxLength={40} placeholder={lang === "fr" ? "Réf. transaction *" : "Transaction ref *"} />
-            </div>
-            <div className="grid grid-cols-2 gap-2.5">
-              <input className="input !py-2 text-sm" name="date" type="date" />
-              <input className="input !py-2 text-sm" name="place" maxLength={80} placeholder={lang === "fr" ? "Lieu" : "Location"} />
-            </div>
-            <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden />
-            {declared === "err" && <p className="text-xs text-live">{lang === "fr" ? "Nom, téléphone valide et référence (3 car. min.) requis." : "Name, valid phone and reference (min 3 chars) required."}</p>}
-            <button className="btn btn-gold w-full !py-2 text-sm">{lang === "fr" ? "Déclarer mon acompte" : "Declare my deposit"}</button>
-          </form>
-        ) : (
-          <button onClick={() => setDeclare(true)} className="w-full text-center text-xs text-ivory/50 underline-offset-4 hover:text-gold hover:underline">
-            {lang === "fr" ? "J'ai déjà payé l'acompte — déclarer ma preuve" : "I already paid the deposit — declare my proof"}
-          </button>
-        )}
-      </div>
-
-      <p className="mt-3 text-center text-[11px] text-ivory/40">
-        {lang === "fr" ? "Paiement automatisé (Mixx by Yas / Flooz / carte) : activation prochaine — vos réservations manuelles restent garanties." : "Automated payment (Mixx by Yas / Flooz / card): coming soon — manual bookings remain fully guaranteed."}
-      </p>
+      <button onClick={() => send(`Bonjour Aklimasound, je souhaite réserver l'offre ${offer?.name ?? ""} pour mon événement.`)} className="btn btn-wa mt-3 w-full">
+        <Icon name="chat" className="h-4 w-4" /> {lang === "fr" ? "Discuter d'abord sur WhatsApp" : "Chat on WhatsApp first"}</button>
     </Shell>
   );
 }

@@ -64,7 +64,7 @@ const D: Dict = {
   },
   signup_cta: { fr: "Créer mon compte", en: "Create my account" },
   signup_later: { fr: "Continuer ma visite", en: "Continue browsing" },
-  booking_title: { fr: "Réservation & acompte", en: "Booking & deposit" },
+  booking_title: { fr: "Réservation", en: "Booking" },
   footer_about: {
     fr: "Expert en sonorisation événementielle, vente & installation fixe de matériel audio et studio de production musicale. Lomé, Togo.",
     en: "Expert in event sound reinforcement, audio equipment sales & fixed installation, and music production studio. Lomé, Togo.",

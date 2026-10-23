@@ -9,6 +9,30 @@ export default function Reglages() {
   const [msg, setMsg] = useState("");
   const [pw, setPw] = useState({ current: "", next: "", confirm: "" });
   const [pwMsg, setPwMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [installEvt, setInstallEvt] = useState<(Event & { prompt(): Promise<void>; userChoice: Promise<{ outcome: string }> }) | null>(null);
+  const [installMsg, setInstallMsg] = useState("");
+
+  useEffect(() => {
+    const onPrompt = (e: Event) => {
+      e.preventDefault();
+      setInstallEvt(e as typeof installEvt);
+    };
+    window.addEventListener("beforeinstallprompt", onPrompt);
+    return () => window.removeEventListener("beforeinstallprompt", onPrompt);
+  }, []);
+
+  const install = async () => {
+    if (!installEvt) {
+      setInstallMsg("Menu du navigateur (⋮ ou Partager) → « Installer l'application » / « Ajouter à l'écran d'accueil ».");
+      return;
+    }
+    await installEvt.prompt();
+    const choice = await installEvt.userChoice;
+    setInstallMsg(choice.outcome === "accepted"
+      ? "✓ Application installée — ouvrez-la depuis votre écran d'accueil."
+      : "Installation annulée.");
+    setInstallEvt(null);
+  };
 
   useEffect(() => {
     api.list<{ memberDiscount: number }>("settings")
@@ -81,6 +105,16 @@ export default function Reglages() {
             <li>• Coûts réels par prestation (profit/perte exact), factures PDF</li>
             <li>• Comptes membres clients (espace client, prix membre automatique côté site)</li>
           </ul>
+        </ACard>
+        <ACard title="Application mobile (PWA)">
+          <p className="text-sm leading-relaxed text-ivory/60">
+            Installez AKS Admin sur votre téléphone ou votre PC : l'icône ouvre le cockpit en plein écran, comme une application native.
+          </p>
+          <button onClick={install} className="btn btn-gold mt-4 !py-2.5 text-sm">
+            <Icon name="package" className="h-4 w-4" /> Installer l'application
+          </button>
+          {installMsg && <p className="mt-3 text-xs text-ivory/60">{installMsg}</p>}
+          <p className="mt-3 text-[11px] text-ivory/40">iPhone / iPad : bouton Partager de Safari → « Sur l'écran d'accueil ».</p>
         </ACard>
       </div>
     </AdminShell>

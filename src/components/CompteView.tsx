@@ -1,6 +1,6 @@
 "use client";
-/** Espace membre : profil, réduction, historique devis/réservations, preuve d'acompte. */
-import { useCallback, useEffect, useRef, useState } from "react";
+/** Espace membre : profil, réduction, historique devis/réservations. */
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "./Navbar";
@@ -52,15 +52,13 @@ export default function CompteView() {
   const { lang } = useI18n();
   const fr = lang === "fr";
   const router = useRouter();
-  const { ready, connected, profile, discount, call, setTokenLocal, getToken } = useMember();
+  const { ready, connected, profile, discount, call, setTokenLocal, getToken, signOut } = useMember();
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [quotes, setQuotes] = useState<QuoteRow[]>([]);
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [busyResend, setBusyResend] = useState(false);
   const [info, setInfo] = useState("");
-  const [upState, setUpState] = useState<Record<string, string>>({});
-  const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const load = useCallback(async () => {
     try {
@@ -96,43 +94,9 @@ export default function CompteView() {
       : (fr ? "Trop de tentatives, réessayez plus tard." : "Too many attempts, try again later."));
   }
 
-  async function upload(bookingId: string, file: File | null) {
-    if (!file) return;
-    setUpState((s) => ({ ...s, [bookingId]: "busy" }));
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("bookingId", bookingId);
-    try {
-      const tok = getToken();
-      const r = await fetch("/api/member/upload", {
-        method: "POST",
-        headers: tok ? { "x-aks-member": tok } : {},
-        credentials: "include",
-        body: fd,
-      });
-      const j = (await r.json().catch(() => ({}))) as { ok?: boolean; code?: string };
-      if (j.ok) {
-        setUpState((s) => ({ ...s, [bookingId]: "ok" }));
-        track("proof_uploaded");
-        void load();
-      } else {
-        const up: Record<string, { fr: string; en: string }> = {
-          too_large: { fr: "Fichier trop lourd (5 Mo max).", en: "File too large (5 MB max)." },
-          bad_type: { fr: "Format refusé — JPEG, PNG, WebP ou PDF uniquement.", en: "Format rejected — JPEG, PNG, WebP or PDF only." },
-          rate_limited: { fr: "Trop d'envois, réessayez plus tard.", en: "Too many uploads, try again later." },
-          bad_status: { fr: "Cette réservation n'attend plus de preuve.", en: "This booking no longer expects a proof." },
-        };
-        setUpState((s) => ({ ...s, [bookingId]: (j.code && up[j.code]) ? (fr ? up[j.code!].fr : up[j.code!].en) : (fr ? "Échec de l'envoi." : "Upload failed.") }));
-      }
-    } catch {
-      setUpState((s) => ({ ...s, [bookingId]: fr ? "Connexion impossible." : "Cannot connect." }));
-    }
-  }
-
   async function logout() {
-    await call({ action: "logout" });
-    setTokenLocal(null);
-    router.push("/");
+    await signOut();
+    router.replace("/");
   }
 
   const d = (iso: string) => {
@@ -245,52 +209,9 @@ export default function CompteView() {
                             {b.total > 0 && (
                               <p className="mt-2 font-display text-lg font-bold text-gradient-gold">{fcfa(b.total)}</p>
                             )}
-                            {b.total > 0 && (
-                              <p className="text-[11px] text-ivory/45">
-                                {fr ? `Acompte ${b.depositRate} %` : `Deposit ${b.depositRate}%`} : {fcfa(Math.round((b.total * b.depositRate) / 100 / 500) * 500)}
-                              </p>
-                            )}
                           </div>
                         </div>
 
-                        {/* Preuve d'acompte */}
-                        {(b.status === "deposit_proof" || b.status === "confirmed") && (
-                          <div className="mt-4 border-t border-ivory/10 pt-4">
-                            {b.proofFile ? (
-                              <p className="flex items-center gap-2 text-sm text-wa">
-                                <Icon name="check" className="h-4 w-4" />
-                                {fr ? "Preuve d'acompte transmise — merci !" : "Deposit proof submitted — thank you!"}
-                              </p>
-                            ) : (
-                              <div className="flex flex-wrap items-center gap-3">
-                                <input
-                                  ref={(el) => { fileRefs.current[b.id] = el; }}
-                                  type="file"
-                                  accept="image/jpeg,image/png,image/webp,application/pdf"
-                                  className="hidden"
-                                  onChange={(e) => { void upload(b.id, e.target.files?.[0] ?? null); e.currentTarget.value = ""; }}
-                                />
-                                <button
-                                  onClick={() => fileRefs.current[b.id]?.click()}
-                                  disabled={upState[b.id] === "busy"}
-                                  className="btn btn-gold !py-2 text-sm"
-                                >
-                                  <Icon name="file" className="h-4 w-4" />
-                                  {upState[b.id] === "busy"
-                                    ? (fr ? "Envoi…" : "Uploading…")
-                                    : (fr ? "Déposer ma preuve d'acompte" : "Upload my deposit proof")}
-                                </button>
-                                <span className="text-[11px] text-ivory/45">{fr ? "JPEG, PNG, WebP ou PDF — 5 Mo max" : "JPEG, PNG, WebP or PDF — 5 MB max"}</span>
-                                {upState[b.id] && upState[b.id] !== "busy" && upState[b.id] !== "ok" && (
-                                  <span className="text-xs text-live">{upState[b.id]}</span>
-                                )}
-                              </div>
-                            )}
-                            {!b.proofFile && b.proofRef && (
-                              <p className="mt-2 text-[11px] text-ivory/45">{fr ? "Référence transmise" : "Reference provided"} : {b.proofRef}</p>
-                            )}
-                          </div>
-                        )}
                       </div>
                     ))}
                   </div>

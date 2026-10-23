@@ -71,7 +71,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         h: { fr: "3. Finalités et bases légales", en: "3. Purposes and legal bases" },
         p: [
-          { fr: "• Traiter vos demandes de devis, réservations et preuves d'acompte — exécution du contrat / mesures précontractuelles.", en: "• Processing your quote requests, bookings and deposit proofs — performance of the contract / pre-contractual measures." },
+          { fr: "• Traiter vos demandes de devis, réservations — exécution du contrat / mesures précontractuelles.", en: "• Processing your quote requests, bookings — performance of the contract / pre-contractual measures." },
           { fr: "• Mesurer l'audience du Site de façon anonyme et sécuriser le service (anti-spam, limite de requêtes) — intérêt légitime.", en: "• Measuring Site audience anonymously and securing the service (anti-spam, rate limiting) — legitimate interest." },
           { fr: "• Publicité et réseaux sociaux (Meta Pixel) — uniquement avec votre consentement exprimé via le gestionnaire de cookies.", en: "• Advertising and social networks (Meta Pixel) — only with your consent given via the cookie manager." },
         ],
@@ -147,18 +147,18 @@ export const LEGAL_DOCS: LegalDoc[] = [
         ],
       },
       {
-        h: { fr: "3. Réservation & acompte", en: "3. Booking & deposit" },
+        h: { fr: "3. Réservation", en: "3. Booking" },
         p: [
-          { fr: "La réservation d'une date devient ferme après : (1) le versement d'un acompte de 30 % ou 50 % du montant total par Mobile Money (Mixx by Yas ex-TMoney, ou Flooz) au numéro indiqué, et (2) la validation de la preuve de paiement par Aklimasound (sous 2 heures ouvrées). La date est bloquée dès validation.", en: "A date booking becomes firm after: (1) payment of a 30% or 50% deposit of the total amount via Mobile Money (Mixx by Yas ex-TMoney, or Flooz) to the indicated number, and (2) validation of the payment proof by Aklimasound (within 2 business hours). The date is locked upon validation." },
+          { fr: "La réservation d'une date devient ferme après confirmation conjointe : Aklimasound vérifie la disponibilité, puis valide votre réservation après échange (téléphone ou WhatsApp). Les modalités de règlement sont convenues ensemble à ce moment-là — aucune somme n'est demandée en ligne.", en: "A date booking becomes firm after joint confirmation: Aklimasound checks availability, then validates your booking after an exchange (phone or WhatsApp). Payment terms are agreed together at that point — no money is requested online." },
           { fr: "Le solde est dû au plus tard le jour de la prestation, avant la mise en service du matériel. Le paiement automatisé en ligne (carte / Mobile Money intégré) sera proposé dès que notre statut légal le permettra ; les modalités actuelles restent garanties.", en: "The balance is due no later than the day of service, before equipment commissioning. Automated online payment (card / integrated Mobile Money) will be offered as soon as our legal status allows; current arrangements remain guaranteed." },
         ],
       },
       {
         h: { fr: "4. Annulation, report & remboursement", en: "4. Cancellation, postponement & refund" },
         p: [
-          { fr: "• Annulation par le client à plus de 7 jours de l'événement : report possible sur une date disponible dans les 6 mois ; à défaut de report, l'acompte est restitué à 50 %.", en: "• Cancellation by the client more than 7 days before the event: postponement possible to an available date within 6 months; failing that, 50% of the deposit is refunded." },
-          { fr: "• Annulation à moins de 7 jours : l'acompte reste acquis (immobilisation du matériel et des équipes).", en: "• Cancellation less than 7 days before: the deposit is retained (equipment and crews are held)." },
-          { fr: "• Annulation par Aklimasound (cas de force majeure inclus) : restitution intégrale de l'acompte ou report au choix du client.", en: "• Cancellation by Aklimasound (including force majeure): full deposit refund or postponement at the client's choice." },
+          { fr: "• Annulation par le client à plus de 7 jours de l'événement : report possible sur une date disponible dans les 6 mois.", en: "• Cancellation by the client more than 7 days before the event: postponement possible to an available date within 6 months." },
+          { fr: "• Annulation à moins de 7 jours : les coûts éventuellement déjà convenus lors de la confirmation restent dus (immobilisation du matériel et des équipes).", en: "• Cancellation less than 7 days before: any costs already agreed at confirmation remain due (equipment and crews are held)." },
+          { fr: "• Annulation par Aklimasound (cas de force majeure inclus) : report au choix du client sur une date équivalente.", en: "• Cancellation by Aklimasound (including force majeure): postponement at the client's choice to an equivalent date." },
           { fr: "• Conditions météo : pour les événements en plein air, un repli couvert ou une protection du matériel doit être prévu par l'organisateur ; à défaut, Aklimasound peut suspendre la prestation pour sécurité, sans remboursement des sommes engagées pour le matériel déjà installé.", en: "• Weather: for open-air events, a covered fallback or equipment protection must be arranged by the organiser; otherwise Aklimasound may suspend the service for safety, without refund of amounts committed for equipment already installed." },
         ],
       },

@@ -32,9 +32,18 @@ export function PackCard({ offer, domainName, onQuote, onBook, delay = 0 }: {
       <div className={`glass card-hover relative flex h-full flex-col rounded-3xl p-6 ${offer.star ? "border-gold/50 bg-gold/[0.06]" : ""}`}>
         {offer.star && <span className="chip absolute -top-3 left-6 bg-ink">★ {t("popular")}</span>}
         <h3 className="font-display text-xl font-bold">{offer.name}</h3>
+        {offer.priceOut != null && (
+          <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-ivory/45">{lang === "fr" ? "En salle (lieu couvert)" : "Indoors (covered venue)"}</p>
+        )}
         <p className="mt-2 font-display text-2xl font-bold text-gradient-gold">
           {offer.price ? fcfa(eff!) : L(offer.priceLabel!, lang)}
         </p>
+        {offer.priceOut != null && (
+          <p className="mt-1 text-sm text-ivory/70">
+            <span className="mr-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ivory/45">{lang === "fr" ? "En plein air" : "Outdoors"}</span>
+            <span className="font-display font-bold text-ivory">{fcfa(memberOn ? withDiscount(offer.priceOut, discount) : offer.priceOut!)}</span>
+          </p>
+        )}
         {memberOn && (
           <p className="mt-0.5 text-[11px] font-semibold text-gold/85">
             <s className="mr-1.5 font-normal text-ivory/40">{fcfa(offer.price!)}</s>
@@ -50,6 +59,12 @@ export function PackCard({ offer, domainName, onQuote, onBook, delay = 0 }: {
             <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-ivory/40">{t("limits")}</p>
             <p className="text-ivory/55 leading-relaxed">{L(offer.limits, lang)}</p>
           </div>
+          {offer.note && (
+            <div>
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-ivory/40">{lang === "fr" ? "Longue distance" : "Long distance"}</p>
+              <p className="text-ivory/55 leading-relaxed">{L(offer.note, lang)}</p>
+            </div>
+          )}
         </div>
         <div className="mt-6 grid gap-2 border-t border-ivory/10 pt-4">
           <button onClick={() => send(waMsg)} className="btn btn-wa !py-2.5 text-sm"><Icon name="chat" className="h-4 w-4" /> {t("cwa")}</button>

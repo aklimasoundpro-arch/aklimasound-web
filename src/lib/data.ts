@@ -25,6 +25,8 @@ export type Offer = {
   limits: { fr: string; en: string };
   cap: number; // jauge max (pers.)
   star?: boolean;
+  priceOut?: number | null; // tarif plein air
+  note?: { fr: string; en: string };
 };
 
 export type Domain = {
@@ -48,9 +50,10 @@ export const DOMAINS: Domain[] = [
     },
     hero: "/img/realisation-scene.jpg",
     offers: [
-      { name: "Pack Basique", price: 120000, cap: 150, includes: { fr: "2 enceintes amplifiées + 4 micros filaires + console 12 voies + 1 technicien.", en: "2 powered speakers + 4 wired mics + 12-channel console + 1 technician." }, limits: { fr: "Max 150 pers. en intérieur. Pas de retours individuels.", en: "Max 150 people indoors. No individual monitors." } },
-      { name: "Pack Pro", price: 250000, cap: 500, star: true, includes: { fr: "Système façade complet + 8 micros chœur + 2 micros HF + retours scène + console numérique 24 voies + 2 techniciens.", en: "Full FOH system + 8 choir mics + 2 HF mics + stage monitors + 24-channel digital console + 2 technicians." }, limits: { fr: "Max 500 pers. Éclairage basique non inclus.", en: "Max 500 people. Basic lighting not included." } },
-      { name: "Pack Premium", price: 450000, cap: 99999, includes: { fr: "Sono forte puissance + captation multi-pistes + multipaire + pack lumières (PAR LED / lyres) + 3 techniciens.", en: "High-power sound + multitrack recording + stage box + lighting pack (PAR LED / moving heads) + 3 technicians." }, limits: { fr: "Grands auditoriums / églises (+500 pers).", en: "Large auditoriums / churches (500+ people)." } },
+      { name: "Pack Basique", price: 250000, priceOut: 450000, cap: 500, includes: { fr: "Système façade complet + 6 micros chœur + 2 micros HF + retours scène + console 24 voies.", en: "Full FOH system + 6 choir mics + 2 HF mics + stage monitors + 24-channel console." }, limits: { fr: "Jusqu'à 500 personnes.", en: "Up to 500 people." }, note: { fr: "Longue distance : majoration logistique (transport & hébergement) étudiée au cas par cas et confirmée au devis.", en: "Long distance: logistics surcharge (transport & accommodation) assessed case by case and confirmed in the quote." } },
+      { name: "Pack Pro", price: 450000, priceOut: 650000, cap: 1000, star: true, includes: { fr: "Tout le Pack Basique + sonorisation forte puissance + nombre de micros adapté à votre effectif.", en: "Everything in Pack Basique + high-power sound + mic count matched to your choir size." }, limits: { fr: "De 500 à 1 000 personnes.", en: "500 to 1,000 people." }, note: { fr: "Longue distance : majoration logistique (transport & hébergement) étudiée au cas par cas et confirmée au devis.", en: "Long distance: logistics surcharge (transport & accommodation) assessed case by case and confirmed in the quote." } },
+      { name: "Pack Premium", price: 650000, priceOut: 850000, cap: 1500, includes: { fr: "Tout le Pack Pro + puissance sonore augmentée pour grandes scènes.", en: "Everything in Pack Pro + increased sound power for large stages." }, limits: { fr: "De 1 000 à 1 500 personnes.", en: "1,000 to 1,500 people." }, note: { fr: "Longue distance : majoration logistique (transport & hébergement) étudiée au cas par cas et confirmée au devis.", en: "Long distance: logistics surcharge (transport & accommodation) assessed case by case and confirmed in the quote." } },
+      { name: "Pack Prestige", price: null, priceLabel: { fr: "Sur devis", en: "On quote" }, priceOut: null, cap: 3000, includes: { fr: "Dimensionnement complet du site : puissance, micros, retours et équipe adaptés à votre événement.", en: "Full site sizing: power, mics, monitors and crew tailored to your event." }, limits: { fr: "De 1 500 à 3 000 personnes — étude et dimensionnement requis avant confirmation.", en: "1,500 to 3,000 people — site study and sizing required before confirmation." }, note: { fr: "Longue distance : majoration logistique (transport & hébergement) étudiée au cas par cas et confirmée au devis.", en: "Long distance: logistics surcharge (transport & accommodation) assessed case by case and confirmed in the quote." } },
     ],
   },
   {
@@ -194,7 +197,7 @@ export const DOMAINS: Domain[] = [
 ];
 
 export const SOLUTIONS = [
-  { icon: "mic", name: { fr: "Concerts & Chorales", en: "Concerts & Choirs" }, desc: { fr: "Clarté acoustique absolue pour sublimer les voix et les instruments live. Gestion multi-micros et retours précis.", en: "Absolute acoustic clarity for live voices and instruments. Multi-mic management and precise monitors." }, pack: "Pack Pro — 250 000 FCFA", href: "/services/concert-chorale" },
+  { icon: "mic", name: { fr: "Concerts & Chorales", en: "Concerts & Choirs" }, desc: { fr: "Clarté acoustique absolue pour sublimer les voix et les instruments live. Gestion multi-micros et retours précis.", en: "Absolute acoustic clarity for live voices and instruments. Multi-mic management and precise monitors." }, pack: "Pack Basique — 250 000 FCFA (salle) · 450 000 FCFA (plein air)", href: "/services/concert-chorale" },
   { icon: "gem", name: { fr: "Mariages & Réceptions", en: "Weddings & Receptions" }, desc: { fr: "Souvenirs inoubliables avec un son cristallin, régie DJ dynamique et mise en lumière féerique de la piste.", en: "Unforgettable memories with crystal sound, dynamic DJ booth and magical dance-floor lighting." }, pack: "Pack Pro — 150 000 FCFA", href: "/services/mariage" },
   { icon: "briefcase", name: { fr: "Entreprises (B2B)", en: "Companies (B2B)" }, desc: { fr: "Séminaires et galas d'entreprise sans larsen ni coupure. Diffusion homogène, micros HF et facturation pro.", en: "Corporate seminars and galas without feedback or dropouts. Even coverage, HF mics and pro invoicing." }, pack: "Pack Pro — 180 000 FCFA", href: "/services/entreprise" },
   { icon: "wrench", name: { fr: "Installation Fixe & Boutique", en: "Fixed Installation & Shop" }, desc: { fr: "Intégration acoustique sur-mesure pour églises, auditoriums, conférences et bars/maquis. Boutique de matériel : ouverture bientôt.", en: "Bespoke acoustic integration for churches, auditoriums, conference rooms and bars. Equipment shop: opening soon." }, pack: { fr: "Demander une étude", en: "Request a study" }, href: "/materiel" },
