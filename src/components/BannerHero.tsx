@@ -27,15 +27,14 @@ export default function BannerHero() {
           </div>
         ))}
       </div>
-      {/* Mobile : éléments empilés, tous visibles */}
-      <div className="flex flex-col items-center gap-5 px-4 pb-8 pt-24 sm:hidden">
-        <Reveal y={16}><Image src="/img/banner/logo.png" alt={lang === "fr" ? "AKS — Aklimasound, la passion du son" : "AKS — Aklimasound, the passion of sound"} width={685} height={793} priority sizes="80vw" className="h-auto w-4/5 max-w-sm" /></Reveal>
-        <Reveal delay={0.15}><Image src="/img/banner/list.png" alt={lang === "fr" ? "Nos prestations : sonorisation, mixage, régie événementielle, installation et optimisation audio" : "Our services: sound reinforcement, mixing, event control, installation and audio optimisation"} width={356} height={793} sizes="70vw" className="h-auto w-full max-w-[240px]" /></Reveal>
-        <Reveal delay={0.25}><Image src="/img/banner/text.png" alt={lang === "fr" ? "Écoute expertise, solutions sur mesure" : "Expert listening, tailored solutions"} width={221} height={793} sizes="60vw" className="h-auto w-full max-w-[200px]" /></Reveal>
-        <div className="flex w-full items-end gap-2">
-          <Reveal delay={0.35} className="w-1/2"><Image src="/img/banner/console.png" alt={lang === "fr" ? "Console de mixage numérique en régie" : "Digital mixing console in control room"} width={330} height={793} sizes="50vw" className="float-slow h-auto w-full" /></Reveal>
-          <Reveal delay={0.45} className="w-1/2"><Image src="/img/banner/speaker.png" alt={lang === "fr" ? "Enceinte de sonorisation professionnelle" : "Professional sound reinforcement speaker"} width={391} height={793} sizes="50vw" className="float-slow h-auto w-full" /></Reveal>
-        </div>
+      {/* Mobile : une seule bande aux proportions exactes de la bannière */}
+      <div className="sm:hidden">
+        <Reveal y={12}>
+          <Image src="/img/banner/full.png"
+            alt="AKS — Aklimasound : sonorisation, mixage, régie événementielle, installation et optimisation audio, écoute expertise"
+            width={1983} height={793} priority sizes="100vw"
+            className="block h-auto w-full" />
+        </Reveal>
       </div>
     </section>
   );
