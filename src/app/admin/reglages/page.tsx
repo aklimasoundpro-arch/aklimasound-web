@@ -5,7 +5,8 @@ import { Icon } from "@/components/icons";
 import { api } from "@/lib/admin-api";
 
 export default function Reglages() {
-  const [discount, setDiscount] = useState<number>(10);
+  const [discount, setDiscount] = useState<number>(0);
+  const [popup, setPopup] = useState<boolean>(false);
   const [msg, setMsg] = useState("");
   const [pw, setPw] = useState({ current: "", next: "", confirm: "" });
   const [pwMsg, setPwMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -35,16 +36,16 @@ export default function Reglages() {
   };
 
   useEffect(() => {
-    api.list<{ memberDiscount: number }>("settings")
-      .then((s) => setDiscount(s.memberDiscount))
+    api.list<{ memberDiscount: number; signupPopup?: boolean }>("settings")
+      .then((s) => { setDiscount(s.memberDiscount); setPopup(!!s.signupPopup); })
       .catch(() => {});
   }, []);
 
   const saveDiscount = async () => {
     setMsg("");
     try {
-      await api.patch("settings", "-", { memberDiscount: discount });
-      setMsg("Réduction enregistrée — le prix membre s'applique automatiquement aux comptes connectés.");
+      await api.patch("settings", "-", { memberDiscount: discount, signupPopup: popup });
+      setMsg("Réglages enregistrés — réduction appliquée aux comptes connectés, pop-up " + (popup ? "activée" : "désactivée") + ".");
     } catch {
       setMsg("Erreur lors de l'enregistrement.");
     }

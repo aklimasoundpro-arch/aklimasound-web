@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { addRow, Col, COOKIE, delRow, getSettings, listRows, notify, patchRow, setMemberDiscount, verifyToken } from "@/lib/db";
+import { addRow, Col, COOKIE, delRow, getSettings, listRows, notify, patchRow, setMemberDiscount, setSignupPopup, verifyToken } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 const COLS: Col[] = ["leads", "quotes", "bookings", "products", "notifications", "events"];
@@ -33,7 +33,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ col: string }> 
   if (!(await authed(req))) return NextResponse.json({ error: "non autorisé" }, { status: 401 });
   const { col } = await ctx.params;
   try {
-    if (col === "settings") return NextResponse.json({ memberDiscount: (await getSettings()).memberDiscount });
+    if (col === "settings") { const st = await getSettings(); return NextResponse.json({ memberDiscount: st.memberDiscount, signupPopup: st.signupPopup }); }
     if (!COLS.includes(col as Col)) return NextResponse.json({ error: "collection inconnue" }, { status: 404 });
     return NextResponse.json(await listRows(col as Col));
   } catch {
@@ -71,6 +71,7 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ col: string }
 
   try {
     if (col === "settings") {
+      const out: Record<string, unknown> = { ok: true };
       if (
         typeof patch.memberDiscount === "number" && Number.isFinite(patch.memberDiscount) &&
         patch.memberDiscount >= 0 && patch.memberDiscount <= 50
@@ -78,9 +79,16 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ col: string }
         const n = Math.round(patch.memberDiscount);
         await setMemberDiscount(n);
         await notify(`Réduction membre réglée à ${n} %`, "badge", false);
-        return NextResponse.json({ ok: true, memberDiscount: n });
+        out.memberDiscount = n;
+      } else {
+        out.memberDiscount = (await getSettings()).memberDiscount;
       }
-      return NextResponse.json({ ok: true, memberDiscount: (await getSettings()).memberDiscount });
+      if (typeof patch.signupPopup === "boolean") {
+        const okPop = await setSignupPopup(patch.signupPopup);
+        if (!okPop) return NextResponse.json({ error: "Colonne signup_popup absente : exécutez le SQL fourni (guide 04)." }, { status: 500 });
+        out.signupPopup = patch.signupPopup;
+      }
+      return NextResponse.json(out);
     }
     if (!COLS.includes(col as Col) || !id) return NextResponse.json({ error: "demande invalide" }, { status: 400 });
 

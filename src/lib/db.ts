@@ -17,7 +17,7 @@ export const DEFAULT_PASSWORD = "Aklima@2026"; // à changer dans Réglages apr�
 
 export type Row = Record<string, unknown> & { id: string; createdAt: string };
 export type DB = {
-  settings: { passHash: string; passSalt: string; secret: string; memberSecret?: string; memberDiscount: number };
+  settings: { passHash: string; passSalt: string; secret: string; memberSecret?: string; memberDiscount: number; signupPopup: boolean };
   leads: Row[];
   quotes: Row[];
   bookings: Row[];
@@ -40,7 +40,7 @@ function seed(): DB {
       passSalt,
       secret: randomBytes(32).toString("hex"),
       memberSecret: randomBytes(32).toString("hex"),
-      memberDiscount: 10,
+      memberDiscount: 0, signupPopup: false,
     },
     leads: [
       { id: uid(), createdAt: days(-1), name: "K. Agbeko", phone: "+228 90 12 34 56", email: "agbeko@mail.tg", source: "popup réduction" },
@@ -211,6 +211,7 @@ export type Settings = {
   adminSecret: string;
   memberSecret: string;
   memberDiscount: number;
+  signupPopup: boolean;
 };
 let sCache: Settings | null = null;
 
@@ -238,7 +239,8 @@ export async function getSettings(): Promise<Settings> {
       passSalt: String(patch.pass_salt ?? st.pass_salt ?? ""),
       adminSecret: String(patch.admin_secret ?? st.admin_secret ?? ""),
       memberSecret: String(patch.member_secret ?? st.member_secret ?? ""),
-      memberDiscount: Number(st.member_discount ?? 10),
+      memberDiscount: Number(st.member_discount ?? 0),
+      signupPopup: Boolean(st.signup_popup ?? false),
     };
     return sCache;
   }
@@ -249,6 +251,7 @@ export async function getSettings(): Promise<Settings> {
     adminSecret: st.secret,
     memberSecret: st.memberSecret!,
     memberDiscount: st.memberDiscount,
+    signupPopup: st.signupPopup,
   };
   return sCache;
 }
@@ -261,6 +264,23 @@ export async function setMemberDiscount(n: number) {
     persist();
   }
   if (sCache) sCache.memberDiscount = n;
+}
+
+export async function setSignupPopup(on: boolean): Promise<boolean> {
+  const s = supa();
+  try {
+    if (s) {
+      const { error } = await s.from("settings").update({ signup_popup: on }).eq("id", 1);
+      if (error) return false;
+    } else {
+      db().settings.signupPopup = on;
+      persist();
+    }
+    if (sCache) sCache.signupPopup = on;
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /* ====================== Authentification admin (scrypt) ====================== */

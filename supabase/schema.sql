@@ -101,7 +101,8 @@ create table if not exists public.settings (
   pass_salt       text not null default '',
   admin_secret    text not null default '',   -- HMAC jetons admin — généré au 1er démarrage
   member_secret   text not null default '',   -- HMAC jetons membres — généré au 1er démarrage
-  member_discount int not null default 10 check (member_discount between 0 and 50),
+  member_discount int not null default 0 check (member_discount between 0 and 50),
+  signup_popup    boolean not null default false,
   updated_at      timestamptz not null default now()
 );
 insert into public.settings (id) values (1) on conflict (id) do nothing;

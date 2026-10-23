@@ -28,12 +28,18 @@ export function SignupModal() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    const key = "aks_signup_seen";
-    const seen = store.get(key);
-    if (!seen || Date.now() > Number(seen)) {
-      const id = setTimeout(() => { setOpen(true); track("signup_popup_shown"); }, 1500);
-      return () => clearTimeout(id);
-    }
+    let alive = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    fetch("/api/public/settings", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((j: { signupPopup?: boolean }) => {
+        if (!alive || j.signupPopup !== true) return; // désactivée par défaut + pilotée depuis l'admin
+        const seen = store.get("aks_signup_seen");
+        if (seen && Date.now() <= Number(seen)) return;
+        timer = setTimeout(() => { setOpen(true); track("signup_popup_shown"); }, 1500);
+      })
+      .catch(() => {});
+    return () => { alive = false; if (timer) clearTimeout(timer); };
   }, []);
   const close = (days = 7) => {
     store.set("aks_signup_seen", String(Date.now() + days * 864e5));
